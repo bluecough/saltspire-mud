@@ -1,0 +1,44 @@
+"""JSON file-based player persistence. One file per character, keyed by
+lowercased name. Each save includes a salted password hash (see game/auth.py)
+checked at login time in main.py. This is still a demo-grade store --
+fine for a single-user or trusted-group prototype, not a hardened production
+auth system."""
+from __future__ import annotations
+import json
+import os
+import re
+from .models import Player
+
+PLAYERS_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "players")
+NAME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]{1,15}$")
+
+
+def is_valid_name(name: str) -> bool:
+    return bool(NAME_RE.match(name or ""))
+
+
+def _path_for(name: str) -> str:
+    safe = name.strip().lower()
+    return os.path.join(PLAYERS_DIR, f"{safe}.json")
+
+
+def exists(name: str) -> bool:
+    return os.path.isfile(_path_for(name))
+
+
+def load(name: str) -> Player | None:
+    path = _path_for(name)
+    if not os.path.isfile(path):
+        return None
+    with open(path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    return Player.from_dict(data)
+
+
+def save(player: Player) -> None:
+    os.makedirs(PLAYERS_DIR, exist_ok=True)
+    path = _path_for(player.name)
+    tmp_path = path + ".tmp"
+    with open(tmp_path, "w", encoding="utf-8") as f:
+        json.dump(player.to_dict(), f, indent=2)
+    os.replace(tmp_path, path)

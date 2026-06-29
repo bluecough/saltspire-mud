@@ -1,0 +1,27 @@
+{
+  "name": "Thessaly",
+  "race": "human",
+  "klass": "warrior",
+  "level": 1,
+  "xp": 16,
+  "gold": 26,
+  "hp": 30,
+  "max_hp": 30,
+  "mana": 0,
+  "max_mana": 0,
+  "room_id": "temple_of_dawn",
+  "inventory": [
+    "leather_armor",
+    "healing_potion"
+  ],
+  "equipment": {
+    "armor": "leather_armor"
+  },
+  "stats": {
+    "str": 10,
+    "dex": 10,
+    "con": 10,
+    "int": 10,
+    "wis": 10
+  }
+}

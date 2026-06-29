@@ -1,0 +1,27 @@
+{
+  "name": "Elowen",
+  "race": "elf",
+  "klass": "mage",
+  "level": 1,
+  "xp": 0,
+  "gold": 20,
+  "hp": 12,
+  "max_hp": 16,
+  "mana": 30,
+  "max_mana": 30,
+  "room_id": "tavern",
+  "inventory": [
+    "oak_staff",
+    "healing_potion"
+  ],
+  "equipment": {
+    "weapon": "oak_staff"
+  },
+  "stats": {
+    "str": 9,
+    "dex": 12,
+    "con": 9,
+    "int": 11,
+    "wis": 10
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "items": {
+    "rusty_dagger": {
+      "name": "a rusty dagger",
+      "description": "A pitted iron dagger, more rust than blade, but it still holds an edge.",
+      "slot": "weapon", "dmg_min": 1, "dmg_max": 4, "value": 5
+    },
+    "short_sword": {
+      "name": "a short sword",
+      "description": "A well-balanced soldier's blade with a leather-wrapped grip.",
+      "slot": "weapon", "dmg_min": 2, "dmg_max": 6, "value": 25
+    },
+    "oak_staff": {
+      "name": "an oak staff",
+      "description": "A gnarled staff of oak, faintly warm to the touch.",
+      "slot": "weapon", "dmg_min": 1, "dmg_max": 5, "value": 20
+    },
+    "wooden_shield": {
+      "name": "a wooden shield",
+      "description": "A round shield banded in iron, scarred from old fights.",
+      "slot": "shield", "armor": 1, "value": 15
+    },
+    "leather_armor": {
+      "name": "a suit of leather armor",
+      "description": "Worn but sturdy leather armor, smelling faintly of tallow.",
+      "slot": "armor", "armor": 2, "value": 30
+    },
+    "chainmail": {
+      "name": "a shirt of chainmail",
+      "description": "Interlocking steel rings, heavy but reliable.",
+      "slot": "armor", "armor": 4, "value": 80
+    },
+    "healing_potion": {
+      "name": "a healing potion",
+      "description": "A small vial of red liquid that smells faintly of crushed herbs.",
+      "slot": "consumable", "heal": 20, "value": 10
+    },
+    "iron_key": {
+      "name": "a tarnished iron key",
+      "description": "An old iron key, green with verdigris. It looks important.",
+      "slot": "key", "value": 0
+    },
+    "goblin_ear": {
+      "name": "a severed goblin ear",
+      "description": "A grisly trophy, still faintly twitching.",
+      "slot": "treasure", "value": 2
+    },
+    "tarnished_crown": {
+      "name": "a tarnished silver crown",
+      "description": "A small silver crown, dented and tarnished, taken from a locked chest.",
+      "slot": "treasure", "value": 50
+    }
+  },
+
+  "mobs": {
+    "dock_rat": {
+      "name": "a mangy dock rat", "description": "A large rat with matted fur, baring yellow teeth.",
+      "level": 1, "max_hp": 12, "dmg_min": 1, "dmg_max": 3, "armor": 0,
+      "xp_reward": 8, "gold_min": 0, "gold_max": 3, "respawn_seconds": 25, "loot": []
+    },
+    "sewer_goblin": {
+      "name": "a sewer goblin", "description": "A scrawny goblin clutching a rusty blade, eyes darting nervously.",
+      "level": 2, "max_hp": 22, "dmg_min": 2, "dmg_max": 5, "armor": 1,
+      "xp_reward": 18, "gold_min": 2, "gold_max": 8, "respawn_seconds": 35,
+      "loot": [{"item": "goblin_ear", "chance": 0.4}]
+    },
+    "goblin_brute": {
+      "name": "a hulking goblin brute", "description": "A scarred goblin twice the size of its kin, wielding a crude club.",
+      "level": 4, "max_hp": 60, "dmg_min": 5, "dmg_max": 11, "armor": 2,
+      "xp_reward": 60, "gold_min": 15, "gold_max": 30, "respawn_seconds": 90,
+      "loot": [{"item": "iron_key", "chance": 1.0}]
+    },
+    "grey_wolf": {
+      "name": "a grey wolf", "description": "A lean wolf with hungry eyes, hackles raised.",
+      "level": 3, "max_hp": 30, "dmg_min": 3, "dmg_max": 7, "armor": 0,
+      "xp_reward": 25, "gold_min": 0, "gold_max": 0, "respawn_seconds": 40, "loot": []
+    },
+    "bandit": {
+      "name": "a road bandit", "description": "A rough-looking bandit in mismatched leather armor.",
+      "level": 3, "max_hp": 35, "dmg_min": 3, "dmg_max": 8, "armor": 1,
+      "xp_reward": 28, "gold_min": 5, "gold_max": 15, "respawn_seconds": 45, "loot": []
+    },
+    "bandit_leader": {
+      "name": "the bandit leader", "description": "A grizzled bandit captain with a wicked-looking falchion.",
+      "level": 5, "max_hp": 75, "dmg_min": 6, "dmg_max": 13, "armor": 3,
+      "xp_reward": 90, "gold_min": 30, "gold_max": 60, "respawn_seconds": 120,
+      "loot": [{"item": "chainmail", "chance": 0.25}, {"item": "tarnished_crown", "chance": 0.1}]
+    }
+  },
+
+  "rooms": {
+    "tavern": {
+      "name": "The Rusty Anchor",
+      "description": "Warm lantern-light spills over scarred oak tables. A fire crackles in a stone hearth, and the smell of stew and spilled ale hangs in the air. A barkeep polishes mugs behind a long counter, half-listening to a sailor's tall tale. This is where most adventurers in town start their day.",
+      "exits": {"north": "market_square", "east": "harbor_docks", "south": "temple_row", "west": "guildhall"},
+      "safe": true
+    },
+    "market_square": {
+      "name": "Market Square",
+      "description": "Awnings of faded cloth shade a busy square. Vendors hawk fruit, fish, and trinkets from rickety carts, and a fountain trickles weakly at the center, green with algae.",
+      "exits": {"south": "tavern", "east": "blacksmith", "west": "general_store", "north": "high_ward_gate"},
+      "safe": true
+    },
+    "blacksmith": {
+      "name": "Brackwater's Forge",
+      "description": "Heat rolls off a roaring forge in waves. Racks of blades, shields, and armor line the walls, and a heavyset smith hammers steadily at an anvil, not looking up.",
+      "exits": {"west": "market_square"},
+      "safe": true,
+      "shop": ["short_sword", "wooden_shield", "leather_armor", "chainmail"]
+    },
+    "general_store": {
+      "name": "The Dusty Satchel",
+      "description": "Shelves sag under the weight of rope, lanterns, dried rations, and unlabeled jars. A bored shopkeeper sits behind a counter, idly counting coins.",
+      "exits": {"east": "market_square"},
+      "safe": true,
+      "shop": ["healing_potion", "oak_staff", "rusty_dagger"]
+    },
+    "high_ward_gate": {
+      "name": "The High Gate",
+      "description": "A tall wrought-iron gate separates the merchant quarter from the quiet, manicured streets beyond. Two guards in polished mail eye passersby with practiced suspicion.",
+      "exits": {"south": "market_square", "north": "high_ward"},
+      "safe": true
+    },
+    "high_ward": {
+      "name": "High Ward Courtyard",
+      "description": "Manicured hedges line a cobbled courtyard. Behind tall windows, the silhouettes of the wealthy move about their business, indifferent to the world below.",
+      "exits": {"south": "high_ward_gate"},
+      "safe": true
+    },
+    "harbor_docks": {
+      "name": "The Harbor Docks",
+      "description": "Weathered piers stretch out over dark water, creaking under the weight of crates and coiled rope. Gulls wheel overhead, screeching at the fishmongers below.",
+      "exits": {"west": "tavern", "north": "harbormaster_office", "south": "fish_market", "east": "city_gate", "down": "sewer_entrance"},
+      "safe": true
+    },
+    "harbormaster_office": {
+      "name": "Harbormaster's Office",
+      "description": "Charts of the coastline cover every wall. A tired clerk shuffles manifests at a cluttered desk, muttering about overdue cargo.",
+      "exits": {"south": "harbor_docks"},
+      "safe": true
+    },
+    "fish_market": {
+      "name": "The Fish Market",
+      "description": "Stalls of packed ice display the morning catch. The smell is overwhelming, but the haggling is fierce and good-natured.",
+      "exits": {"north": "harbor_docks"},
+      "safe": true
+    },
+    "sewer_entrance": {
+      "name": "Sewer Grate",
+      "description": "A rusted grate hangs open above a slick stone shaft leading down into darkness. The stench rising from below is unmistakable.",
+      "exits": {"up": "harbor_docks", "north": "sewer_tunnel_1"},
+      "safe": true
+    },
+    "sewer_tunnel_1": {
+      "name": "Sewer Tunnel",
+      "description": "Foul water trickles along a cracked stone channel. Something skitters in the dark just beyond the edge of sight.",
+      "exits": {"south": "sewer_entrance", "east": "sewer_tunnel_2"},
+      "safe": false,
+      "mob_spawns": [{"mob": "dock_rat", "max": 2}]
+    },
+    "sewer_tunnel_2": {
+      "name": "Deeper Sewer Tunnel",
+      "description": "The tunnel narrows here, walls slick with algae. Crude markings, more graffiti than language, are scratched into the stone.",
+      "exits": {"west": "sewer_tunnel_1", "north": "sewer_lair"},
+      "safe": false,
+      "mob_spawns": [{"mob": "sewer_goblin", "max": 2}]
+    },
+    "sewer_lair": {
+      "name": "Goblin Lair",
+      "description": "Trash, bones, and stolen goods are piled in heaps around a crude camp. A heavy, dented chest sits against the far wall, secured with an old iron lock.",
+      "exits": {"south": "sewer_tunnel_2"},
+      "safe": false,
+      "mob_spawns": [{"mob": "goblin_brute", "max": 1}],
+      "container": {"name": "a dented chest", "requires_key": "iron_key", "loot": ["tarnished_crown", "healing_potion"]}
+    },
+    "temple_row": {
+      "name": "Temple Row",
+      "description": "Quiet cobbled streets lined with modest shrines. Soft chanting drifts from an open doorway to the east.",
+      "exits": {"north": "tavern", "east": "temple_of_dawn"},
+      "safe": true
+    },
+    "temple_of_dawn": {
+      "name": "Temple of the Dawn",
+      "description": "Sunlight filters through stained glass, washing the stone floor in color. A serene priestess tends a low altar, offering quiet blessings to anyone who asks.",
+      "exits": {"west": "temple_row"},
+      "safe": true,
+      "services": ["heal"]
+    },
+    "guildhall": {
+      "name": "Adventurers' Guildhall",
+      "description": "Faded banners and notched weapons hang from the rafters, trophies of guild members long retired. A weathered guildmaster nods approvingly at anyone bearing fresh scars.",
+      "exits": {"east": "tavern"},
+      "safe": true
+    },
+    "city_gate": {
+      "name": "The Coast Gate",
+      "description": "A squat stone gatehouse marks the edge of town. Beyond it, a rutted dirt road winds north along the cliffs.",
+      "exits": {"west": "harbor_docks", "north": "coast_road"},
+      "safe": true
+    },
+    "coast_road": {
+      "name": "The Coast Road",
+      "description": "Wind-bent grass lines a narrow road above the sea cliffs. Paw prints cross the mud heading toward a dark treeline, and wheel ruts veer off toward a stand of rocks.",
+      "exits": {"south": "city_gate", "north": "wolf_den", "east": "bandit_camp"},
+      "safe": true
+    },
+    "wolf_den": {
+      "name": "The Wolf Den",
+      "description": "A shallow cave mouth opens in the hillside, littered with bones and tufts of grey fur. Low growls echo from the darkness within.",
+      "exits": {"south": "coast_road"},
+      "safe": false,
+      "mob_spawns": [{"mob": "grey_wolf", "max": 2}]
+    },
+    "bandit_camp": {
+      "name": "Bandit Camp",
+      "description": "A ring of stones surrounds a smoldering campfire. Stolen crates and bedrolls are scattered carelessly about, guarded by hard-eyed company.",
+      "exits": {"west": "coast_road"},
+      "safe": false,
+      "mob_spawns": [{"mob": "bandit", "max": 2}, {"mob": "bandit_leader", "max": 1}]
+    }
+  }
+}
