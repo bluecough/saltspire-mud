@@ -1,17 +1,24 @@
 """
-One-shot generator: expands data/world.json with new districts/zones,
+One-shot generator: expands the world data with new districts/zones,
 mobs, and items, on top of the existing hand-written content. Run once
 from the project root:  python3 build_world.py
 Safe to re-run: it always starts from a fresh read of the *current*
-data/world.json and is idempotent as long as the new ids below haven't
+world data and is idempotent as long as the new ids below haven't
 already been added (re-running after a successful run will just
 re-add/overwrite the same keys with the same values).
+
+Reads/writes the same split-file layout as game/world.py (data/items.json,
+data/mobs.json, data/rooms_1.json, data/rooms_2.json), falling back to a
+legacy monolithic data/world.json if the split files aren't present.
 """
 import json
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-WORLD_PATH = os.path.join(BASE_DIR, "data", "world.json")
+ITEMS_PATH = os.path.join(BASE_DIR, "data", "items.json")
+MOBS_PATH = os.path.join(BASE_DIR, "data", "mobs.json")
+ROOM_SHARD_PATHS = [os.path.join(BASE_DIR, "data", "rooms_1.json"), os.path.join(BASE_DIR, "data", "rooms_2.json")]
+LEGACY_WORLD_PATH = os.path.join(BASE_DIR, "data", "world.json")
 
 OPPOSITE = {"north": "south", "south": "north", "east": "west", "west": "east", "up": "down", "down": "up"}
 
@@ -880,12 +887,31 @@ LINKS = [
 # Assembly
 # ---------------------------------------------------------------------------
 
-def main():
-    with open(WORLD_PATH, "r", encoding="utf-8") as f:
-        data = json.load(f)
+def _write_json(path, data):
+    tmp_path = path + ".tmp"
+    with open(tmp_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+    os.replace(tmp_path, path)
 
-    data["items"].update(NEW_ITEMS)
-    data["mobs"].update(NEW_MOBS)
+
+def main():
+    if os.path.exists(ITEMS_PATH):
+        with open(ITEMS_PATH, "r", encoding="utf-8") as f:
+            items = json.load(f)
+        with open(MOBS_PATH, "r", encoding="utf-8") as f:
+            mobs = json.load(f)
+        rooms = {}
+        for shard_path in ROOM_SHARD_PATHS:
+            if os.path.exists(shard_path):
+                with open(shard_path, "r", encoding="utf-8") as f:
+                    rooms.update(json.load(f))
+    else:
+        with open(LEGACY_WORLD_PATH, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        items, mobs, rooms = data["items"], data["mobs"], data["rooms"]
+
+    items.update(NEW_ITEMS)
+    mobs.update(NEW_MOBS)
 
     for rid, rdata in NEW_ROOMS.items():
         rdata.setdefault("exits", {})
@@ -895,19 +921,25 @@ def main():
         rdata.setdefault("services", [])
         rdata.setdefault("lore", "")
         rdata.setdefault("container", None)
-        data["rooms"][rid] = rdata
+        rooms[rid] = rdata
 
     for rid, lore in EXISTING_ROOM_LORE.items():
-        data["rooms"][rid]["lore"] = lore
+        rooms[rid]["lore"] = lore
 
     for a, direction, b in LINKS:
-        link(data["rooms"], a, direction, b)
+        link(rooms, a, direction, b)
 
-    tmp_path = WORLD_PATH + ".tmp"
-    with open(tmp_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
-    os.replace(tmp_path, WORLD_PATH)
-    print(f"Wrote {len(data['rooms'])} rooms, {len(data['mobs'])} mobs, {len(data['items'])} items to {WORLD_PATH}")
+    room_ids = sorted(rooms.keys())
+    midpoint = (len(room_ids) + 1) // 2
+    shard_1 = {rid: rooms[rid] for rid in room_ids[:midpoint]}
+    shard_2 = {rid: rooms[rid] for rid in room_ids[midpoint:]}
+
+    _write_json(ITEMS_PATH, items)
+    _write_json(MOBS_PATH, mobs)
+    _write_json(ROOM_SHARD_PATHS[0], shard_1)
+    _write_json(ROOM_SHARD_PATHS[1], shard_2)
+    print(f"Wrote {len(rooms)} rooms, {len(mobs)} mobs, {len(items)} items "
+          f"to {ITEMS_PATH}, {MOBS_PATH}, and room shard files.")
 
 
 if __name__ == "__main__":
