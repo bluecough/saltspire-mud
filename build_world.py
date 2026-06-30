@@ -678,6 +678,63 @@ NEW_ROOMS = {
         "shop": ["garnet_ring", "engraved_locket"],
     },
 
+    # ===================== ZONE: Guild Concourse =====================
+    "guild_concourse": {
+        "name": "The Hall of Banners",
+        "description": "A vaulted concourse north of the mercenary board, four banners hanging from the rafters -- crossed blades, an open eye, a raised hand wreathed in light, and a banner with no device at all. Each marks the entrance to one of the city's professional guilds.",
+        "safe": True,
+        "lore": "Saltspire's four guilds predate the Harbor Concord itself -- the First Hundred organized along trade lines before they'd finished agreeing on a government. The Concord has tried, more than once, to fold them into something more official. All four have politely and unanimously declined.",
+    },
+    "warriors_guild": {
+        "name": "The Warriors' Guild",
+        "description": "A high-ceilinged training hall, weapon racks lining every wall and a sand-floored sparring ring at its center. The air smells of oiled steel and old sweat.",
+        "safe": True,
+        "trainer": {
+            "name": "Garrick Stonefist",
+            "klass": "warrior",
+            "title": "Guildmaster",
+            "description": "A broad-shouldered veteran with a nose broken in at least three different decades, Garrick watches every sparring match like he's grading it. He's outlived three duels he wasn't supposed to win.",
+            "level": 100,
+        },
+    },
+    "mages_guild": {
+        "name": "The Mages' Guild",
+        "description": "Built into the lowest chamber of the black spire that gave the city its name, this circular hall is lined with shelved tomes and humming with a faint, ever-present charge. Sigils chalked on the floor are redrawn fresh every morning.",
+        "safe": True,
+        "trainer": {
+            "name": "Ottoline Vance",
+            "klass": "mage",
+            "title": "Archmagister",
+            "description": "Ottoline speaks slowly and precisely, as though every sentence costs mana too. She has spent forty years studying the black spire from the inside and still won't say what, exactly, it is.",
+            "level": 100,
+        },
+    },
+    "clerics_guild": {
+        "name": "The Clerics' Guild",
+        "description": "A quiet chapter house of pale stone, distinct from the worship halls of Temple Row -- this is where the Dawnmother's clergy (and a few of the older household faiths besides) actually train.",
+        "safe": True,
+        "trainer": {
+            "name": "Brother Aldous Wren",
+            "klass": "cleric",
+            "title": "High Hand",
+            "description": "Aldous keeps his hands folded and his voice gentle, but he's blunt about doctrine and blunter about technique. He trained under three different faiths before the Concord made the chapter house non-denominational.",
+            "level": 100,
+        },
+    },
+    "rogues_guild": {
+        "name": "The Rogues' Guild",
+        "description": "A low, lamplit den beneath the concourse, reached by a trapdoor no map of Saltspire bothers to show. It isn't Undertow territory -- the two organizations simply agree not to ask too many questions about each other's business.",
+        "safe": True,
+        "trainer": {
+            "name": "Sable Quick",
+            "klass": "rogue",
+            "title": "Guildmaster",
+            "description": "Sable never quite seems to be looking at you and never quite seems to be anywhere else either. She took over the guild by out-waiting the last three guildmasters, which she considers a perfectly respectable method.",
+            "level": 100,
+        },
+        "lore": "The Rogues' Guild predates the Undertow by at least a generation, and its charter -- such as it is -- specifically forbids smuggling, to keep the two outfits from ever formally merging. Whether that line has ever actually held is a question Sable answers with a smile and nothing else.",
+    },
+
     # ===================== ZONE: Coast Road extended =====================
     "crossroads_shrine": {
         "name": "Crossroads Shrine",
@@ -858,6 +915,11 @@ LINKS = [
     ("mercenary_board", "east", "town_archive"),
     ("tannery", "east", "apothecary"),
     ("weavers_row", "south", "jeweler"),
+    ("mercenary_board", "north", "guild_concourse"),
+    ("guild_concourse", "north", "warriors_guild"),
+    ("guild_concourse", "east", "mages_guild"),
+    ("guild_concourse", "west", "clerics_guild"),
+    ("guild_concourse", "down", "rogues_guild"),
 
     # -- Coast Road extended --
     ("coast_road", "west", "crossroads_shrine"),
