@@ -108,7 +108,7 @@ ABILITIES = {
 HELP_TEXT = (
     "Available commands:<br>"
     "&nbsp;&nbsp;movement: north/south/east/west/up/down (n/s/e/w/u/d)<br>"
-    "&nbsp;&nbsp;look [target], score, inventory (i), equipment (eq)<br>"
+    "&nbsp;&nbsp;look [target], consider/con &lt;target&gt;, score, inventory (i), equipment (eq)<br>"
     "&nbsp;&nbsp;lore (history) &mdash; read the deeper history of where you stand, if any<br>"
     "&nbsp;&nbsp;say &lt;msg&gt;, emote &lt;action&gt;, shout &lt;msg&gt;, who<br>"
     "&nbsp;&nbsp;get &lt;item&gt;, drop &lt;item&gt;, wear/wield &lt;item&gt;, remove &lt;item&gt;<br>"
@@ -178,6 +178,8 @@ async def dispatch(ctx: CommandContext, raw: str):
     if cmd in DIRECTIONS:
         await do_move(ctx, DIRECTIONS[cmd])
     elif cmd in ("look", "l"):
+        await do_look(ctx, arg)
+    elif cmd in ("consider", "con"):
         await do_look(ctx, arg)
     elif cmd in ("lore", "history"):
         await do_lore(ctx)
@@ -440,7 +442,7 @@ async def do_shout(ctx, arg):
 async def do_who(ctx):
     p = ctx.player
     online = [x for x in ctx.engine.players.values() if x.connected]
-    lines = [c.help_(f"Players online ({len(online)}):")]
+    lines = [c.help_(f"Players online ({len(online)}):" )]
     for other in online:
         tag = f" {c.admin('[admin]')}" if other.is_admin else ""
         lines.append(f"&nbsp;&nbsp;{c.player(other.name)} &mdash; level {other.level} {other.race} {other.klass}{tag}")
@@ -1212,7 +1214,7 @@ async def do_rooms(ctx):
     if not p.is_admin:
         await ctx.engine.send(p, c.error("You don't have the authority to do that."))
         return
-    lines = [c.admin(f"Rooms ({len(ctx.world.rooms)}):")]
+    lines = [c.admin(f"Rooms ({len(ctx.world.rooms)}):" )]
     for rid in sorted(ctx.world.rooms.keys()):
         room = ctx.world.rooms[rid]
         lines.append(f"&nbsp;&nbsp;{rid} &mdash; {c.esc(room.name)}")
