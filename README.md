@@ -195,3 +195,5 @@ The volume mount keeps character saves on your host across container restarts.
 ## Deploying to AWS
 
 See [AWS_DEPLOYMENT.md](./AWS_DEPLOYMENT.md) for step-by-step options (EC2, ECS Fargate, App Runner) and the tradeoffs between them — the short version is that the single-process/in-memory design above means this should run as exactly one container/instance, not an autoscaled fleet.
+
+[Play on the test server](http://saltspire.oldtextgames.org:8000)
