@@ -2,16 +2,16 @@
   "apothecary": {
     "name": "The Apothecary",
     "description": "Shelves of corked vials and dried herbs in precise rows. The apothecary measures every dose twice and trusts no one's description of their own symptoms.",
-    "exits": {
-      "west": "tannery"
-    },
     "safe": true,
-    "mob_spawns": [],
     "shop": [
       "greater_healing_potion",
       "mana_draught",
       "soothing_tonic"
     ],
+    "exits": {
+      "west": "tannery"
+    },
+    "mob_spawns": [],
     "services": [],
     "lore": "",
     "container": null
@@ -60,10 +60,6 @@
   "boggy_shallows": {
     "name": "Boggy Shallows",
     "description": "The foothill trail drops into wet ground here, reeds and standing water replacing solid earth underfoot.",
-    "exits": {
-      "west": "foothill_path",
-      "south": "the_fenmire"
-    },
     "safe": false,
     "mob_spawns": [
       {
@@ -71,6 +67,10 @@
         "max": 2
       }
     ],
+    "exits": {
+      "west": "foothill_path",
+      "south": "the_fenmire"
+    },
     "shop": [],
     "services": [],
     "lore": "",
@@ -88,6 +88,26 @@
     "shop": [],
     "services": [],
     "lore": "Beyond this gate the coast road runs north past Tallow's Reach and the salt fields, and -- if you believe the lighthouse keeper's stories -- toward foothills and mountains that no Saltspire survey has ever properly mapped.",
+    "container": null
+  },
+  "clerics_guild": {
+    "name": "The Clerics' Guild",
+    "description": "A quiet chapter house of pale stone, distinct from the worship halls of Temple Row -- this is where the Dawnmother's clergy (and a few of the older household faiths besides) actually train.",
+    "safe": true,
+    "trainer": {
+      "name": "Brother Aldous Wren",
+      "klass": "cleric",
+      "title": "High Hand",
+      "description": "Aldous keeps his hands folded and his voice gentle, but he's blunt about doctrine and blunter about technique. He trained under three different faiths before the Concord made the chapter house non-denominational.",
+      "level": 100
+    },
+    "exits": {
+      "east": "guild_concourse"
+    },
+    "mob_spawns": [],
+    "shop": [],
+    "services": [],
+    "lore": "",
     "container": null
   },
   "coast_road": {
@@ -109,24 +129,24 @@
   "concord_chamber": {
     "name": "Concord Chamber",
     "description": "Seven high-backed chairs ring a round table inlaid with a map of the Greywash coast. Six are empty; the seventh Warden's seat looks no less empty for being occupied most days.",
+    "safe": true,
+    "lore": "The Harbor Concord is seven Wardens, one elected by each ward's guilds and households, who govern Saltspire openly -- no secrecy, no masks, unlike the whispered habits of older, grander cities. In practice the Wardens spend more time arguing over harbor tariffs than ruling, and everyone in the room knows the Undertow's coin reaches at least two of the seven chairs.",
     "exits": {
       "south": "keep_courtyard",
       "down": "keep_dungeon"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
-    "lore": "The Harbor Concord is seven Wardens, one elected by each ward's guilds and households, who govern Saltspire openly -- no secrecy, no masks, unlike the whispered habits of older, grander cities. In practice the Wardens spend more time arguing over harbor tariffs than ruling, and everyone in the room knows the Undertow's coin reaches at least two of the seven chairs.",
     "container": null
   },
   "counting_house": {
     "name": "Ashgrave & Voss Counting House",
     "description": "Ledgers stack floor to ceiling behind a barred teller's window. A clerk eyes you the way clerks eye everyone: as a possible liability.",
+    "safe": true,
     "exits": {
       "west": "silver_court"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -136,25 +156,25 @@
   "crossroads_shrine": {
     "name": "Crossroads Shrine",
     "description": "A small wayside shrine where the coast road forks, its stone worn smooth by generations of travelers touching it for luck.",
+    "safe": true,
+    "lore": "One road continues north along the bluffs toward Tallow's Reach; the other cuts south across open ground the locals still call the salt fields, where Saltspire's founders broke the Red Tide pirate fleet two hundred years ago. Most travelers touch the shrine before choosing either.",
     "exits": {
       "east": "coast_road",
       "north": "windswept_bluffs",
       "south": "salt_fields"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
-    "lore": "One road continues north along the bluffs toward Tallow's Reach; the other cuts south across open ground the locals still call the salt fields, where Saltspire's founders broke the Red Tide pirate fleet two hundred years ago. Most travelers touch the shrine before choosing either.",
     "container": null
   },
   "drowned_lantern_inn": {
     "name": "The Drowned Lantern",
     "description": "A sailors' flophouse thick with pipe smoke, where the patrons talk in low voices and stop talking entirely when strangers walk in.",
+    "safe": true,
     "exits": {
       "north": "fish_market"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -164,9 +184,6 @@
   "drowned_thicket": {
     "name": "The Drowned Thicket",
     "description": "A dense stand of dead, waterlogged trees, branches knitted together overhead into a permanent twilight.",
-    "exits": {
-      "west": "the_fenmire"
-    },
     "safe": false,
     "mob_spawns": [
       {
@@ -174,6 +191,9 @@
         "max": 1
       }
     ],
+    "exits": {
+      "west": "the_fenmire"
+    },
     "shop": [],
     "services": [],
     "lore": "",
@@ -182,14 +202,14 @@
   "druids_grove": {
     "name": "The Old Grove",
     "description": "A circle of ancient trees stands undisturbed on the hillside, older than the road that now skirts around it out of what looks like respect.",
+    "safe": true,
+    "lore": "The grove predates Saltspire entirely -- predates the First Hundred's landing, by the look of the oldest trunks. A solitary warden who answers to no guild and no Concord seat tends it, and has for as long as anyone in Tallow's Reach can remember asking.",
     "exits": {
       "south": "foothill_path"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
-    "lore": "The grove predates Saltspire entirely -- predates the First Hundred's landing, by the look of the oldest trunks. A solitary warden who answers to no guild and no Concord seat tends it, and has for as long as anyone in Tallow's Reach can remember asking.",
     "container": null
   },
   "fish_market": {
@@ -210,11 +230,6 @@
   "flooded_cistern": {
     "name": "Flooded Cistern",
     "description": "A vaulted brick chamber, half-submerged, older brickwork than anything else in the sewers. Whatever this was built to hold, it wasn't waste.",
-    "exits": {
-      "north": "sewer_tunnel_3",
-      "up": "sewer_lair",
-      "down": "undercity_stair"
-    },
     "safe": false,
     "mob_spawns": [
       {
@@ -226,6 +241,11 @@
         "max": 2
       }
     ],
+    "exits": {
+      "north": "sewer_tunnel_3",
+      "up": "sewer_lair",
+      "down": "undercity_stair"
+    },
     "shop": [],
     "services": [],
     "lore": "",
@@ -234,34 +254,33 @@
   "flooded_vault": {
     "name": "Flooded Vault",
     "description": "A small chamber behind a corroded bronze door, the air inside strangely dry compared to everything around it.",
-    "exits": {
-      "up": "old_vael_archive"
-    },
     "safe": true,
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
     "container": {
       "name": "a corroded bronze door",
       "requires_key": "vael_sigil",
       "loot": [
         "vael_trident",
         "healing_potion"
-      ],
-      "opened": false
-    }
+      ]
+    },
+    "exits": {
+      "up": "old_vael_archive"
+    },
+    "mob_spawns": [],
+    "shop": [],
+    "services": [],
+    "lore": ""
   },
   "foothill_path": {
     "name": "Foothill Path",
     "description": "The coast road gives way to a rougher trail climbing into the hills, grass replaced by scree and wind-bent pine.",
+    "safe": true,
     "exits": {
       "south": "bandit_camp",
       "north": "druids_grove",
       "west": "greyfang_pass",
       "east": "boggy_shallows"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -271,9 +290,6 @@
   "galley_hold": {
     "name": "Galley Hold",
     "description": "A dark, low-ceilinged hold stacked with barrels, most of them long since claimed by vermin.",
-    "exits": {
-      "up": "moored_galley_deck"
-    },
     "safe": false,
     "mob_spawns": [
       {
@@ -281,6 +297,9 @@
         "max": 2
       }
     ],
+    "exits": {
+      "up": "moored_galley_deck"
+    },
     "shop": [],
     "services": [],
     "lore": "",
@@ -306,13 +325,13 @@
   "gildwater_promenade": {
     "name": "Gildwater Promenade",
     "description": "A wide, lamplit avenue paved in pale stone, lined with topiary trimmed into the shapes of ships and anchors. The wealth here is loud in its quietness.",
+    "safe": true,
     "exits": {
       "south": "high_ward",
       "east": "manor_row",
       "west": "the_gilt_lantern",
       "north": "silver_court"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -322,9 +341,6 @@
   "greyfang_pass": {
     "name": "Greyfang Pass",
     "description": "The trail ends at a narrow pass between two scarred peaks, scorched stone underfoot. Whatever made those scorch marks is plainly still in residence.",
-    "exits": {
-      "east": "foothill_path"
-    },
     "safe": false,
     "mob_spawns": [
       {
@@ -332,9 +348,29 @@
         "max": 1
       }
     ],
+    "lore": "No map made in Saltspire shows anything past Greyfang Pass -- not because nothing's there, but because no expedition has come back with enough notes to draw one. The ashwing drake seems content to guard the pass rather than range toward the coast, which everyone in the Concord has agreed, by unspoken consensus, not to test.",
+    "exits": {
+      "east": "foothill_path"
+    },
     "shop": [],
     "services": [],
-    "lore": "No map made in Saltspire shows anything past Greyfang Pass -- not because nothing's there, but because no expedition has come back with enough notes to draw one. The ashwing drake seems content to guard the pass rather than range toward the coast, which everyone in the Concord has agreed, by unspoken consensus, not to test.",
+    "container": null
+  },
+  "guild_concourse": {
+    "name": "The Hall of Banners",
+    "description": "A vaulted concourse north of the mercenary board, four banners hanging from the rafters -- crossed blades, an open eye, a raised hand wreathed in light, and a banner with no device at all. Each marks the entrance to one of the city's professional guilds.",
+    "safe": true,
+    "lore": "Saltspire's four guilds predate the Harbor Concord itself -- the First Hundred organized along trade lines before they'd finished agreeing on a government. The Concord has tried, more than once, to fold them into something more official. All four have politely and unanimously declined.",
+    "exits": {
+      "south": "mercenary_board",
+      "north": "warriors_guild",
+      "east": "mages_guild",
+      "west": "clerics_guild",
+      "down": "rogues_guild"
+    },
+    "mob_spawns": [],
+    "shop": [],
+    "services": [],
     "container": null
   },
   "guildhall": {
@@ -356,11 +392,11 @@
   "hamlet_road": {
     "name": "Hamlet Road",
     "description": "A gentler stretch of road descends toward the sound of gulls and the smell of drying nets.",
+    "safe": true,
     "exits": {
       "south": "windswept_bluffs",
       "north": "tallows_reach"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -388,13 +424,13 @@
   "harbor_pier": {
     "name": "The Long Pier",
     "description": "A pier of black timber reaches far out over the water, gulls wheeling above the masts of moored fishing boats.",
+    "safe": true,
     "exits": {
       "down": "harbor_docks",
       "north": "warehouse_row",
       "west": "moored_galley_deck",
       "east": "lighthouse_base"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -418,9 +454,6 @@
   "hidden_grotto": {
     "name": "Hidden Grotto",
     "description": "A secluded hollow behind a curtain of vines, cool and damp, where something rustles unseen among the roots.",
-    "exits": {
-      "west": "terraced_gardens"
-    },
     "safe": false,
     "mob_spawns": [
       {
@@ -428,6 +461,9 @@
         "max": 1
       }
     ],
+    "exits": {
+      "west": "terraced_gardens"
+    },
     "shop": [],
     "services": [],
     "lore": "",
@@ -464,10 +500,6 @@
   "hollow_moor": {
     "name": "The Hollow Moor",
     "description": "Flat, marshy ground stretches inland from the hamlet, dotted with standing stones and the kind of mist that doesn't burn off by midday.",
-    "exits": {
-      "west": "tallows_reach",
-      "north": "old_sentinel_base"
-    },
     "safe": false,
     "mob_spawns": [
       {
@@ -479,6 +511,10 @@
         "max": 1
       }
     ],
+    "exits": {
+      "west": "tallows_reach",
+      "north": "old_sentinel_base"
+    },
     "shop": [],
     "services": [],
     "lore": "",
@@ -487,12 +523,6 @@
   "hollow_yard": {
     "name": "The Hollow Yard",
     "description": "Rows of leaning headstones spread out under a permanently overcast patch of sky. The grass here never seems to grow past ankle height.",
-    "exits": {
-      "north": "hollow_yard_gate",
-      "east": "old_graves",
-      "west": "weeping_willow",
-      "south": "mausoleum_row"
-    },
     "safe": false,
     "mob_spawns": [
       {
@@ -504,6 +534,12 @@
         "max": 1
       }
     ],
+    "exits": {
+      "north": "hollow_yard_gate",
+      "east": "old_graves",
+      "west": "weeping_willow",
+      "south": "mausoleum_row"
+    },
     "shop": [],
     "services": [],
     "lore": "",
@@ -512,11 +548,11 @@
   "hollow_yard_gate": {
     "name": "Hollow Yard Gate",
     "description": "A low iron gate, more symbolic than functional, marks the edge of the cemetery grounds.",
+    "safe": true,
     "exits": {
       "north": "temple_row",
       "south": "hollow_yard"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -526,15 +562,15 @@
   "jeweler": {
     "name": "Tessaline's Jewels",
     "description": "A narrow shop crowded with display cases, each piece individually lit to look more valuable than the last.",
-    "exits": {
-      "north": "weavers_row"
-    },
     "safe": true,
-    "mob_spawns": [],
     "shop": [
       "garnet_ring",
       "engraved_locket"
     ],
+    "exits": {
+      "north": "weavers_row"
+    },
+    "mob_spawns": [],
     "services": [],
     "lore": "",
     "container": null
@@ -542,16 +578,16 @@
   "keep_armory": {
     "name": "Keep Armory",
     "description": "Standard-issue Concord steel, racked and oiled. The quartermaster sizes you up without much interest.",
-    "exits": {
-      "east": "keep_courtyard"
-    },
     "safe": true,
-    "mob_spawns": [],
     "shop": [
       "steel_longsword",
       "tower_shield",
       "plate_armor"
     ],
+    "exits": {
+      "east": "keep_courtyard"
+    },
+    "mob_spawns": [],
     "services": [],
     "lore": "",
     "container": null
@@ -559,10 +595,10 @@
   "keep_barracks": {
     "name": "Keep Barracks",
     "description": "Rows of narrow cots and footlockers, every blanket folded with the same regulation precision.",
+    "safe": true,
     "exits": {
       "west": "keep_courtyard"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -572,13 +608,13 @@
   "keep_courtyard": {
     "name": "Keep Courtyard",
     "description": "A drilling yard within the keep walls, ringed by barracks, armory, and the squat tower that houses the Concord's council chamber.",
+    "safe": true,
     "exits": {
       "south": "warden_gate",
       "east": "keep_barracks",
       "west": "keep_armory",
       "north": "concord_chamber"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -588,9 +624,6 @@
   "keep_dungeon": {
     "name": "Keep Dungeon",
     "description": "A row of iron-barred cells beneath the keep, damp and unevenly lit. Most stand empty. One does not.",
-    "exits": {
-      "up": "concord_chamber"
-    },
     "safe": false,
     "mob_spawns": [
       {
@@ -598,6 +631,9 @@
         "max": 1
       }
     ],
+    "exits": {
+      "up": "concord_chamber"
+    },
     "shop": [],
     "services": [],
     "lore": "",
@@ -606,11 +642,11 @@
   "lighthouse_base": {
     "name": "Lighthouse Base",
     "description": "A squat stone lighthouse stands at the end of the pier, its iron door propped open with a chock of driftwood.",
+    "safe": true,
     "exits": {
       "west": "harbor_pier",
       "up": "lighthouse_top"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -620,24 +656,44 @@
   "lighthouse_top": {
     "name": "Lighthouse Top",
     "description": "Wind tears at you the moment you step out onto the gallery. The lamp's great lens turns slowly behind you, and the whole curve of the Greywash coast spreads out below.",
+    "safe": true,
+    "lore": "On a clear night the lighthouse keeper claims you can see all the way to the foothills past the coast road -- and, if the old stories hold any truth, the dark line of mountains beyond that no one from Saltspire has mapped in living memory.",
     "exits": {
       "down": "lighthouse_base"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
-    "lore": "On a clear night the lighthouse keeper claims you can see all the way to the foothills past the coast road -- and, if the old stories hold any truth, the dark line of mountains beyond that no one from Saltspire has mapped in living memory.",
+    "container": null
+  },
+  "mages_guild": {
+    "name": "The Mages' Guild",
+    "description": "Built into the lowest chamber of the black spire that gave the city its name, this circular hall is lined with shelved tomes and humming with a faint, ever-present charge. Sigils chalked on the floor are redrawn fresh every morning.",
+    "safe": true,
+    "trainer": {
+      "name": "Ottoline Vance",
+      "klass": "mage",
+      "title": "Archmagister",
+      "description": "Ottoline speaks slowly and precisely, as though every sentence costs mana too. She has spent forty years studying the black spire from the inside and still won't say what, exactly, it is.",
+      "level": 100
+    },
+    "exits": {
+      "west": "guild_concourse"
+    },
+    "mob_spawns": [],
+    "shop": [],
+    "services": [],
+    "lore": "",
     "container": null
   },
   "manor_row": {
     "name": "Manor Row",
     "description": "Tall iron-fenced manors face each other across a narrow private lane, every window dark or curtained.",
+    "safe": true,
     "exits": {
       "west": "gildwater_promenade",
       "north": "terraced_gardens"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -663,10 +719,6 @@
   "mausoleum_row": {
     "name": "Mausoleum Row",
     "description": "Stone mausoleums line a narrow gravel path, doors long since rusted shut -- except one, hanging open at an angle that suggests it wasn't opened politely.",
-    "exits": {
-      "north": "hollow_yard",
-      "down": "the_sealed_crypt"
-    },
     "safe": false,
     "mob_spawns": [
       {
@@ -674,6 +726,10 @@
         "max": 1
       }
     ],
+    "exits": {
+      "north": "hollow_yard",
+      "down": "the_sealed_crypt"
+    },
     "shop": [],
     "services": [],
     "lore": "",
@@ -682,25 +738,26 @@
   "mercenary_board": {
     "name": "The Mercenary Board",
     "description": "A weathered board outside the guildhall, pinned thick with contracts, bounty notices, and at least one challenge to a duel that's clearly gone unanswered for weeks.",
+    "safe": true,
+    "lore": "Guild contracts here range from 'clear the rats from my cellar' to bounties on named Undertow lieutenants, posted (unofficially) by Concord guards who can't act on them directly. Read close enough and you can track most of Saltspire's quiet conflicts just from what's nailed to this board.",
     "exits": {
       "south": "guildhall",
-      "east": "town_archive"
+      "east": "town_archive",
+      "north": "guild_concourse"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
-    "lore": "Guild contracts here range from 'clear the rats from my cellar' to bounties on named Undertow lieutenants, posted (unofficially) by Concord guards who can't act on them directly. Read close enough and you can track most of Saltspire's quiet conflicts just from what's nailed to this board.",
     "container": null
   },
   "moored_galley_deck": {
     "name": "Deck of a Moored Galley",
     "description": "The weathered deck of an old trading galley, sails furled, ropes coiled with more care than the rest of the ship deserves.",
+    "safe": true,
     "exits": {
       "east": "harbor_pier",
       "down": "galley_hold"
     },
-    "safe": true,
     "mob_spawns": [],
     "shop": [],
     "services": [],
@@ -710,9 +767,6 @@
   "old_graves": {
     "name": "The Old Graves",
     "description": "The oldest section of the yard, headstones worn smooth and unreadable, dating back to the city's first decades.",
-    "exits": {
-      "west": "hollow_yard"
-    },
     "safe": false,
     "mob_spawns": [
       {
@@ -720,6 +774,9 @@
         "max": 1
       }
     ],
+    "exits": {
+      "west": "hollow_yard"
+    },
     "shop": [],
     "services": [],
     "lore": "",

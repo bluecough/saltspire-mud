@@ -115,42 +115,26 @@
     "slot": "weapon",
     "dmg_min": 3,
     "dmg_max": 8,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 60
   },
   "tower_shield": {
     "name": "a tower shield",
     "description": "A heavy iron-banded shield, tall enough to crouch behind.",
     "slot": "shield",
-    "dmg_min": 0,
-    "dmg_max": 0,
     "armor": 3,
-    "heal": 0,
-    "mana": 0,
     "value": 70
   },
   "plate_armor": {
     "name": "a suit of plate armor",
     "description": "Polished steel plate, the kind only a Warden's guard is issued.",
     "slot": "armor",
-    "dmg_min": 0,
-    "dmg_max": 0,
     "armor": 6,
-    "heal": 0,
-    "mana": 0,
     "value": 150
   },
   "warden_seal": {
     "name": "a tarnished warden's seal",
     "description": "A wax-seal stamp bearing the Harbor Concord's anchor -- it has no business being on a renegade guard.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 40
   },
   "fishhook_knife": {
@@ -159,97 +143,54 @@
     "slot": "weapon",
     "dmg_min": 1,
     "dmg_max": 3,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 8
   },
   "ships_log": {
     "name": "a water-stained ship's log",
     "description": "A logbook gone soft with damp. The last entries describe cargo that was never declared to the harbormaster.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 15
   },
   "stolen_ledger": {
     "name": "a stolen ledger",
     "description": "Names, weights, and prices in a cramped hand -- a record the Undertow would pay dearly to get back.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 35
   },
   "undertow_signet": {
     "name": "an undertow signet ring",
     "description": "A black iron ring etched with a wave swallowing a coin -- the mark of the dockside syndicate.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 55
   },
   "spyglass": {
     "name": "a brass spyglass",
     "description": "A dented but functional spyglass, its lens still clear.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 25
   },
   "tin_amulet": {
     "name": "a cheap tin amulet",
     "description": "A worthless little charm, sold to sailors who want to believe it's lucky.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 18
   },
   "vael_sigil": {
     "name": "a corroded vael sigil",
     "description": "A coin-sized disc of green-black metal, warm to the touch. It fits a lock somewhere in the drowned ruins.",
     "slot": "key",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 0
   },
   "tide_idol": {
     "name": "a small tide idol",
     "description": "A carved figure, half-eroded, of a many-armed shape rising from waves.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 45
   },
   "drowned_crown": {
     "name": "the drowned crown",
     "description": "A crown of fused coral and silver, salt-crusted, heavier than it looks. Old Vael's last king wore this.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 220
   },
   "vael_trident": {
@@ -258,20 +199,12 @@
     "slot": "weapon",
     "dmg_min": 5,
     "dmg_max": 12,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 160
   },
   "tidewarden_heart": {
     "name": "the tidewarden's heart",
     "description": "A fist-sized lump of something between coral and crystal, still faintly pulsing with cold light.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 120
   },
   "warden_femur_blade": {
@@ -280,74 +213,46 @@
     "slot": "weapon",
     "dmg_min": 4,
     "dmg_max": 9,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 90
   },
   "grave_gold": {
     "name": "a handful of grave gold",
     "description": "Coins buried with the dead, green with tarnish and best spent far from Temple Row.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 60
   },
   "padded_tunic": {
     "name": "a padded tunic",
     "description": "Quilted cloth armor, light enough to wear under a cloak.",
     "slot": "armor",
-    "dmg_min": 0,
-    "dmg_max": 0,
     "armor": 1,
-    "heal": 0,
-    "mana": 0,
     "value": 12
   },
   "woolen_cloak": {
     "name": "a woolen cloak",
     "description": "A traveler's cloak, dyed a deep harbor-grey.",
     "slot": "armor",
-    "dmg_min": 0,
-    "dmg_max": 0,
     "armor": 1,
-    "heal": 0,
-    "mana": 0,
     "value": 18
   },
   "soothing_tonic": {
     "name": "a soothing tonic",
     "description": "A bitter apothecary's draught that settles the stomach and the nerves alike.",
     "slot": "consumable",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
     "heal": 10,
-    "mana": 0,
     "value": 8
   },
   "greater_healing_potion": {
     "name": "a greater healing potion",
     "description": "A larger, darker vial than the common healing potion -- the apothecary's strongest brew.",
     "slot": "consumable",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
     "heal": 40,
-    "mana": 0,
     "value": 25
   },
   "mana_draught": {
     "name": "a mana draught",
     "description": "A faintly luminous blue liquid that smells of crushed quartz.",
     "slot": "consumable",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
     "mana": 20,
     "value": 20
   },
@@ -355,55 +260,31 @@
     "name": "a garnet ring",
     "description": "A simple gold band set with a deep red stone, catching what little light there is.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 70
   },
   "engraved_locket": {
     "name": "an engraved locket",
     "description": "A locket engraved with initials that mean nothing to anyone left in Saltspire.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 50
   },
   "dried_rations": {
     "name": "dried rations",
     "description": "Salted fish and hard biscuit, wrapped in oilcloth. Filling, if not appetizing.",
     "slot": "consumable",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
     "heal": 6,
-    "mana": 0,
     "value": 3
   },
   "fishing_net": {
     "name": "a fishing net",
     "description": "A coil of tarred netting, mended many times over.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 10
   },
   "sentinels_badge": {
     "name": "a sentinel's badge",
     "description": "A corroded badge from a watch disbanded long before anyone alive remembers why.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 30
   },
   "captains_cutlass": {
@@ -412,31 +293,18 @@
     "slot": "weapon",
     "dmg_min": 4,
     "dmg_max": 10,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 120
   },
   "red_tide_standard": {
     "name": "a tattered red tide standard",
     "description": "A faded banner, once carried by a pirate fleet that broke itself against Saltspire's founders.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 100
   },
   "drake_scale": {
     "name": "an ash-scaled drake scale",
     "description": "A single scale, the size of a shield, still warm and smelling faintly of cinders.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 250
   },
   "ashwing_fang": {
@@ -445,20 +313,12 @@
     "slot": "weapon",
     "dmg_min": 7,
     "dmg_max": 15,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 300
   },
   "hag_eye": {
     "name": "a hag's preserved eye",
     "description": "Kept in a jar of murky brine, it seems to track you even now.",
     "slot": "treasure",
-    "dmg_min": 0,
-    "dmg_max": 0,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 90
   },
   "fen_mothers_staff": {
@@ -467,9 +327,6 @@
     "slot": "weapon",
     "dmg_min": 4,
     "dmg_max": 10,
-    "armor": 0,
-    "heal": 0,
-    "mana": 0,
     "value": 150
   }
 }
