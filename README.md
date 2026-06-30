@@ -10,10 +10,12 @@ Saltspire was founded roughly 340 years ago by "the First Hundred," refugees who
 
 ## Features
 
-- 87 connected rooms across a dozen-plus areas: the original town core, plus Gildwater Heights and Warden Keep (the wealthy district and seat of government), an expanded dockside with its own smuggler's den and lighthouse, the flooded ruins of Old Vael beneath the sewers, Temple Row and the Hollow Yard cemetery (with a sealed crypt), an expanded Trade Quarter, and a much longer coast road running through a fishing hamlet, a haunted moor, sea caves, the salt fields, a mountain pass, and a swamp
+- 93 connected rooms across a dozen-plus areas: the original town core, plus Gildwater Heights and Warden Keep (the wealthy district and seat of government), an expanded dockside with its own smuggler's den and lighthouse, the flooded ruins of Old Vael beneath the sewers, Temple Row and the Hollow Yard cemetery (with a sealed crypt), an expanded Trade Quarter with a guild concourse and four class guild halls, and a much longer coast road running through a fishing hamlet, a haunted moor, sea caves, the salt fields, a mountain pass, and a swamp
 - Extended lore: many rooms carry deeper history readable with `lore`/`history`, covering the town's founders, its government, its criminal underworld, and the drowned civilization beneath it — none of it reused from any Forgotten Realms or Waterdeep material
 - 4 races (human, elf, dwarf, halfling) and 4 classes (warrior, mage, cleric, rogue), each with their own stats, HP/mana curve, and starting gear
-- Real-time tick-based combat (server resolves a round every 2 seconds), plus instant special attacks: `bash` (warrior), `backstab` (rogue), and spells (`cast missile`, `cast heal`)
+- Levels 1-100, with 9 abilities per class unlocked across that range (level 1, 5, 12, 20, 35, 50, 65, 80, 95) — every class starts knowing one innate ability for free and learns the rest from its guild trainer as it levels up. Highlights: `veil` (mage invisibility), `bless` (cleric buff), plus warrior/rogue combat skills including `vanish` (rogue) and a stealth skill
+- A guild hall for each class (Warriors', Mages', Clerics', Rogues') off a new concourse north of the Mercenary Board, each staffed by a level-100 guildmaster NPC who teaches that class's abilities via `learn` — these guildmasters are fixtures, not spawned mobs, so they can't be attacked
+- Real-time tick-based combat (server resolves a round every 2 seconds), plus instant special attacks (`bash`, `backstab`, and the wider per-class skill list above via `use`) and spells via `cast`
 - 37 monster types (levels 1-12) with loot tables, gold/XP rewards, and timed respawns, including several zone "boss" encounters
 - 43 item types, including consumables that restore HP and/or mana via `quaff`
 - Shops (buy/sell) in 10+ locations, a healer you can `pray` to, and several locked/unlocked containers
@@ -54,17 +56,20 @@ Movement: `north`/`south`/`east`/`west`/`up`/`down` (or `n`/`s`/`e`/`w`/`u`/`d`)
 | `get <item>`, `drop <item>`, `wear <item>`, `remove <item>` | Manage items |
 | `quaff <item>` (`drink`/`use`) | Consume a potion or ration for its HP/mana |
 | `kill <target>`, `flee`, `rest`, `wake` | Combat basics |
-| `cast missile <target>` (mage), `cast heal [target]` (cleric) | Spells, cost mana |
-| `bash <target>` (warrior), `backstab <target>` (rogue) | Class specials, no mana cost |
+| `skills` | List your class's abilities, showing which you know, which you can learn now, and which need a higher level |
+| `learn <ability>` | Learn a known-eligible ability from your class's guild trainer (must be at that guild, high enough level, and have the gold) |
+| `cast <spell> [target]` (mage/cleric) | Cast a learned spell — damage, healing, buffs, invisibility, or mana restoration depending on the spell |
+| `use <skill> [target]` (warrior/rogue) | Use a learned combat skill — bonus-damage attacks, buffs, self-heals, stealth, or vanish, depending on the skill |
+| `bash <target>` (warrior), `backstab <target>` (rogue) | Each class's innate starter skill — known from creation, no need to learn it |
 | `list`, `buy <item>`, `sell <item>` | Shop in town |
 | `pray` | Full heal at the Temple of the Dawn, for a small donation |
 | `open chest` | Open containers where present (some need a key) |
 | `changepass <old> <new>` | Change your own password |
 | `help`, `quit` | Help text; saves and disconnects |
 
-Combat is room-gated: you can only `kill` something in a room marked unsafe, and you can't leave a room while fighting (use `flee` instead). Once a fight starts, the server resolves a round every couple of seconds until one side dies, you flee, or the mob is already dead.
+Combat is room-gated: you can only `kill` something in a room marked unsafe, and you can't leave a room while fighting (use `flee` instead). Once a fight starts, the server resolves a round every couple of seconds until one side dies, you flee, or the mob is already dead. The level cap is 100; XP stops accumulating past it instead of overflowing.
 
-A rough map: the **Rusty Anchor** tavern is still the spawn point and hub, with the original four exits leading to the **Market Square** (blacksmith, general store, and north to the **High Ward**, which now continues into **Gildwater Heights** — manor row, a masquerade hall, and **Warden Keep**, seat of the Harbor Concord), the **Harbor Docks** (harbormaster, fish market, and now a long pier with a lighthouse, a moored galley, a pawnshop, and the Undertow's hidden den, plus the original sewer entrance), **Temple Row** (now also leading to a row of minor shrines and the **Hollow Yard** cemetery, with a sealed crypt below it), and the **Guildhall** (now also the gateway to an expanded Trade Quarter: an archive, an apothecary, a jeweler, and a mercenary's job board).
+A rough map: the **Rusty Anchor** tavern is still the spawn point and hub, with the original four exits leading to the **Market Square** (blacksmith, general store, and north to the **High Ward**, which now continues into **Gildwater Heights** — manor row, a masquerade hall, and **Warden Keep**, seat of the Harbor Concord), the **Harbor Docks** (harbormaster, fish market, and now a long pier with a lighthouse, a moored galley, a pawnshop, and the Undertow's hidden den, plus the original sewer entrance), **Temple Row** (now also leading to a row of minor shrines and the **Hollow Yard** cemetery, with a sealed crypt below it), and the **Guildhall** (now also the gateway to an expanded Trade Quarter: an archive, an apothecary, a jeweler, and a mercenary's job board, which in turn leads north to the **Hall of Banners** concourse and the four class guild halls — Warriors', Mages', Clerics', and Rogues' — where each class's trainer teaches its abilities).
 
 The sewers still lead to the goblin lair, but now continue much further down into the flooded ruins of **Old Vael**, the drowned civilization Saltspire's founders fled — culminating in a guarded vault and a deep, ancient guardian. Past the **Coast Gate**, the **Coast Road** still has its wolf den and bandit camp, but a fork now continues north past a fishing hamlet, a haunted moor with an old watchtower, sea caves hiding a second Undertow smuggling route, and the salt fields where a pirate fleet met its end — and inland past the bandit camp into foothills, a sacred grove, a mountain pass guarded by a young drake, and a swamp ruled by something far older than the town itself. Several of these areas scale well past the original level range, for characters who outgrow the starting zones.
 
@@ -130,6 +135,8 @@ saltspire-mud/
   players/                One JSON file per saved character (includes password hash + admin flag)
   test_client.py          Scripted WebSocket smoke test (see Testing, below)
   test_new_world.py       Scripted smoke test focused on the expanded world's new zones, lore/quaff commands, and new mobs/shops
+  test_guild_live.py      Scripted WebSocket smoke test for the guild halls: navigation, trainer `look`, `learn` gating, and confirming trainers can't be attacked
+  test_abilities_offline.py   Offline test (imports the game package directly, no server needed) covering every spell/skill kind, learn gating, trainer setup, and the level-100 cap
   Dockerfile, .dockerignore, docker-compose.yml   Container packaging
   AWS_DEPLOYMENT.md       Guide for running this on AWS
 ```
@@ -161,6 +168,14 @@ python3 test_new_world.py  # tours the expanded world: a new shop, lore/rlore, q
 ```
 
 This also requires the same `Admin` character (it uses `goto` to jump straight to the new zones rather than walking the whole map).
+
+```bash
+python3 test_guild_live.py  # walks a fresh mage to the Mages' Guild, checks skills/learn/trainer behavior
+```
+
+```bash
+python3 test_abilities_offline.py  # no server needed -- exercises every spell/skill kind, learn gating, and the level cap directly against the game package
+```
 
 ## Running in Docker
 

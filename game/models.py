@@ -54,6 +54,20 @@ class Container:
 
 
 @dataclass
+class Trainer:
+    """A guild trainer NPC. Trainers are flavor/utility fixtures attached
+    directly to a Room (see below) -- they are never spawned as a
+    MobInstance, so there is no combat target with their name and players
+    have no way to attack them. 'level' is purely descriptive (shown via
+    'look')."""
+    name: str
+    klass: str  # which class this trainer teaches: warrior/mage/cleric/rogue
+    title: str
+    description: str
+    level: int = 100
+
+
+@dataclass
 class Room:
     id: str
     name: str
@@ -65,6 +79,7 @@ class Room:
     services: list = field(default_factory=list)  # e.g. ["heal"]
     container: Optional[Container] = None
     lore: str = ""  # optional extended history/flavor text, read with 'lore'
+    trainer: Optional[Trainer] = None  # guild trainer NPC, if any (see learn/use)
 
 
 # ---------------------------------------------------------------------------
@@ -102,6 +117,11 @@ CLASS_INFO = {
 }
 
 BASE_STAT = 10
+MAX_LEVEL = 100
+
+# The one ability each class starts with, already known -- everything else
+# in commands.ABILITIES must be learned from that class's guild trainer.
+STARTER_SKILL = {"warrior": "bash", "mage": "missile", "cleric": "heal", "rogue": "backstab"}
 
 
 @dataclass
@@ -126,16 +146,23 @@ class Player:
     password_hash: str = ""
     password_salt: str = ""
     is_admin: bool = False
+    known_skills: list = field(default_factory=list)        # ability ids learned from guild trainers
 
-    # --- runtime-only, never persisted ---
+    # --- runtime-only, never persisted: combat buffs reset on reconnect ---
     websocket: object = field(default=None, repr=False, compare=False)
     connected: bool = field(default=False, repr=False, compare=False)
     last_save: float = field(default=0.0, repr=False, compare=False)
+    dmg_buff_until: float = field(default=0.0, repr=False, compare=False)
+    dmg_buff_amount: int = field(default=0, repr=False, compare=False)
+    armor_buff_until: float = field(default=0.0, repr=False, compare=False)
+    armor_buff_amount: int = field(default=0, repr=False, compare=False)
+    invisible_until: float = field(default=0.0, repr=False, compare=False)
+    skill_cooldowns: dict = field(default_factory=dict, repr=False, compare=False)  # ability id -> ready-at timestamp
 
     PERSIST_FIELDS = (
         "name", "race", "klass", "level", "xp", "gold", "hp", "max_hp", "mana",
         "max_mana", "room_id", "inventory", "equipment", "stats",
-        "password_hash", "password_salt", "is_admin",
+        "password_hash", "password_salt", "is_admin", "known_skills",
     )
 
     def stat_mod(self, stat: str) -> int:
@@ -159,7 +186,7 @@ class Player:
             "room_id": self.room_id, "inventory": list(self.inventory),
             "equipment": dict(self.equipment), "stats": dict(self.stats),
             "password_hash": self.password_hash, "password_salt": self.password_salt,
-            "is_admin": self.is_admin,
+            "is_admin": self.is_admin, "known_skills": list(self.known_skills),
         }
 
     @classmethod
@@ -169,7 +196,8 @@ class Player:
         mods = RACE_MODS[race]
         stats = {s: BASE_STAT + mods[s] for s in ("str", "dex", "con", "int", "wis")}
         p = cls(name=name, race=race, klass=klass, stats=stats,
-                password_hash=password_hash, password_salt=password_salt, is_admin=is_admin)
+                password_hash=password_hash, password_salt=password_salt, is_admin=is_admin,
+                known_skills=[STARTER_SKILL[klass]])
         p.recalc_max_stats()
         p.hp = p.max_hp
         p.mana = p.max_mana
@@ -185,6 +213,13 @@ class Player:
 
     @classmethod
     def from_dict(cls, d: dict) -> "Player":
+        known_skills = list(d.get("known_skills", []))
+        # Backward compat: saves from before this feature existed (or that
+        # somehow lost their starter ability) still know their class's
+        # innate starter skill -- it was never something you had to learn.
+        starter = STARTER_SKILL.get(d["klass"])
+        if starter and starter not in known_skills:
+            known_skills.append(starter)
         p = cls(
             name=d["name"], race=d["race"], klass=d["klass"], level=d.get("level", 1),
             xp=d.get("xp", 0), gold=d.get("gold", 20), hp=d.get("hp", 1), max_hp=d.get("max_hp", 1),
@@ -192,6 +227,6 @@ class Player:
             inventory=list(d.get("inventory", [])), equipment=dict(d.get("equipment", {})),
             stats=dict(d.get("stats", {})),
             password_hash=d.get("password_hash", ""), password_salt=d.get("password_salt", ""),
-            is_admin=bool(d.get("is_admin", False)),
+            is_admin=bool(d.get("is_admin", False)), known_skills=known_skills,
         )
         return p
