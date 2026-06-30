@@ -38,6 +38,7 @@ class World:
                 shop=rdata.get("shop", []),
                 services=rdata.get("services", []),
                 container=container,
+                lore=rdata.get("lore", ""),
             )
 
     def get_room(self, room_id: str) -> Room | None:
@@ -93,6 +94,7 @@ class World:
             "mob_spawns": list(r.mob_spawns),
             "shop": list(r.shop),
             "services": list(r.services),
+            "lore": r.lore,
             "container": (
                 {
                     "name": r.container.name,

@@ -23,6 +23,7 @@ class ItemTemplate:
     dmg_max: int = 0
     armor: int = 0
     heal: int = 0
+    mana: int = 0
     value: int = 0
 
 
@@ -62,6 +63,7 @@ class Room:
     shop: list = field(default_factory=list)  # item ids sold here
     services: list = field(default_factory=list)  # e.g. ["heal"]
     container: Optional[Container] = None
+    lore: str = ""  # optional extended history/flavor text, read with 'lore'
 
 
 # ---------------------------------------------------------------------------
