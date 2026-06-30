@@ -291,6 +291,47 @@ async def do_move(ctx, direction):
     await do_look(ctx, "")
 
 
+def _mob_difficulty(player_level: int, mob_level: int) -> str:
+    diff = mob_level - player_level
+    if diff <= -6:
+        return "It poses no real threat to you."
+    elif diff <= -3:
+        return "It looks manageable — well within your abilities."
+    elif diff <= 2:
+        return "It looks like a fair fight."
+    elif diff <= 5:
+        return "It looks dangerous. You should approach with caution."
+    else:
+        return "It would be deadly to face. Only a fool charges in unprepared."
+
+
+def _player_appearance(other) -> str:
+    race_desc = {
+        "human":    "a human of average build",
+        "elf":      "a slender elf with sharp eyes and long limbs",
+        "dwarf":    "a stocky dwarf, broad-shouldered and solid as hearthstone",
+        "halfling": "a small halfling, light-footed and keen-eyed",
+    }.get(other.race, f"a {other.race}")
+    class_desc = {
+        "warrior": "bearing the hardened look of someone who has taken as many blows as they've dealt",
+        "mage":    "with an air of intense focus and faint arcane residue clinging to their clothes",
+        "cleric":  "moving with a serene deliberateness, as though guided by something you can't quite see",
+        "rogue":   "carrying themselves with a quiet economy of movement that suggests old, careful habits",
+    }.get(other.klass, "")
+    return f"{race_desc}, {class_desc}"
+
+
+def _player_worn_desc(other, world) -> str:
+    worn = []
+    for slot, iid in other.equipment.items():
+        tmpl = world.get_item(iid)
+        if tmpl:
+            worn.append(tmpl.name)
+    if worn:
+        return "They are wearing: " + ", ".join(worn) + "."
+    return "They wear no visible equipment."
+
+
 async def do_look(ctx, arg):
     p = ctx.player
     room = ctx.world.get_room(p.room_id)
@@ -305,11 +346,16 @@ async def do_look(ctx, arg):
         mob = ctx.engine.find_mob_in_room(p.room_id, arg)
         if mob:
             tmpl = ctx.world.get_mob_template(mob.template_id)
-            await ctx.engine.send(p, f"{c.mob(tmpl.name)} ({mob.hp}/{tmpl.max_hp} hp)<br>{c.esc(tmpl.description)}")
+            difficulty = _mob_difficulty(p.level, tmpl.level)
+            await ctx.engine.send(
+                p, f"{c.mob(tmpl.name)}<br>{c.esc(tmpl.description)}<br>{c.system(difficulty)}")
             return
         other = ctx.engine.find_player_in_room(p.room_id, arg, exclude=p.name)
         if other:
-            await ctx.engine.send(p, f"{c.player(other.name)} the {other.race} {other.klass}, level {other.level}.")
+            appearance = _player_appearance(other)
+            worn = _player_worn_desc(other, ctx.world)
+            await ctx.engine.send(
+                p, f"{c.player(other.name)} is {appearance}.<br>{c.esc(worn)}")
             return
         iid = _match_item_in_list(ctx, p.inventory, arg) or _match_item_in_list(ctx, ctx.engine.ground.get(p.room_id, []), arg)
         if iid:
@@ -394,8 +440,7 @@ async def do_shout(ctx, arg):
 async def do_who(ctx):
     p = ctx.player
     online = [x for x in ctx.engine.players.values() if x.connected]
-    lines = [c.help_(f"Players online ({len(online)}):")
-]
+    lines = [c.help_(f"Players online ({len(online)}):")]
     for other in online:
         tag = f" {c.admin('[admin]')}" if other.is_admin else ""
         lines.append(f"&nbsp;&nbsp;{c.player(other.name)} &mdash; level {other.level} {other.race} {other.klass}{tag}")
@@ -1167,8 +1212,7 @@ async def do_rooms(ctx):
     if not p.is_admin:
         await ctx.engine.send(p, c.error("You don't have the authority to do that."))
         return
-    lines = [c.admin(f"Rooms ({len(ctx.world.rooms)}):")
-]
+    lines = [c.admin(f"Rooms ({len(ctx.world.rooms)}):")]
     for rid in sorted(ctx.world.rooms.keys()):
         room = ctx.world.rooms[rid]
         lines.append(f"&nbsp;&nbsp;{rid} &mdash; {c.esc(room.name)}")
