@@ -8,7 +8,7 @@ import random
 import time
 from . import colors as c
 from . import persistence
-from .models import Player, MobInstance, CLASS_INFO
+from .models import Player, MobInstance, CLASS_INFO, MAX_LEVEL
 from .world import World
 
 TICK_SECONDS = 2.0
@@ -117,6 +117,8 @@ class GameEngine:
                 tmpl = self.world.get_item(iid)
                 if tmpl:
                     total += tmpl.armor
+        if time.time() < player.armor_buff_until:
+            total += player.armor_buff_amount
         return total
 
     def player_weapon(self, player: Player):
@@ -129,7 +131,8 @@ class GameEngine:
         base = random.randint(lo, hi)
         info = CLASS_INFO[player.klass]
         bonus = max(0, player.stat_mod(info["primary"]) // 2)
-        return max(1, base + bonus)
+        dmg_buff = player.dmg_buff_amount if time.time() < player.dmg_buff_until else 0
+        return max(1, base + bonus + dmg_buff)
 
     def roll_mob_damage(self, tmpl, player: Player) -> int:
         base = random.randint(tmpl.dmg_min, tmpl.dmg_max)
@@ -164,18 +167,27 @@ class GameEngine:
         await self.maybe_level_up(killer)
 
     async def maybe_level_up(self, player: Player):
+        if player.level >= MAX_LEVEL:
+            player.xp = 0  # already capped -- nothing more to bank
+            return
         threshold = player.level * 100
         leveled = False
-        while player.xp >= threshold:
+        while player.level < MAX_LEVEL and player.xp >= threshold:
             player.xp -= threshold
             player.level += 1
             player.recalc_max_stats()
             player.hp = player.max_hp
             player.mana = player.max_mana
             leveled = True
+            if player.level >= MAX_LEVEL:
+                player.xp = 0
+                break
             threshold = player.level * 100
         if leveled:
-            await self.send(player, c.tag(f"*** You are now level {player.level}! ***", "c-levelup"))
+            msg = f"*** You are now level {player.level}! ***"
+            if player.level >= MAX_LEVEL:
+                msg += f" You have reached the maximum level of {MAX_LEVEL}."
+            await self.send(player, c.tag(msg, "c-levelup"))
 
     # ---- tick loop -----------------------------------------------------
     async def tick_loop(self):
