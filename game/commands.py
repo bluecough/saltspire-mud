@@ -16,9 +16,93 @@ OPPOSITE_DIRECTION = {
     "north": "south", "south": "north", "east": "west", "west": "east", "up": "down", "down": "up",
 }
 
-SPELLS = {
-    "missile": {"class": "mage", "cost": 8, "kind": "damage", "dmg_min": 4, "dmg_max": 10},
-    "heal": {"class": "cleric", "cost": 10, "kind": "heal", "heal_min": 12, "heal_max": 22},
+# Every spell (mage/cleric, mana-based, used via 'cast') and skill
+# (warrior/rogue, cooldown-based, used via 'use' -- bash/backstab keep their
+# own dedicated commands for backward compatibility but are also listed here
+# so 'skills'/'learn' see them). level_req 1 abilities are each class's
+# innate starter (see models.STARTER_SKILL) and never need to be learned;
+# everything else must be learned from that class's guild trainer with
+# 'learn <ability>', gated on level and a small gold training fee.
+ABILITIES = {
+    # ---- Mage spells ----
+    "missile": {"class": "mage", "type": "spell", "level_req": 1, "cost": 8, "learn_cost": 0,
+                "kind": "damage", "dmg_min": 4, "dmg_max": 10, "verb": "missile of force"},
+    "spark": {"class": "mage", "type": "spell", "level_req": 5, "cost": 5, "learn_cost": 30,
+              "kind": "damage", "dmg_min": 2, "dmg_max": 6, "verb": "spark of flame"},
+    "frost_lance": {"class": "mage", "type": "spell", "level_req": 12, "cost": 14, "learn_cost": 80,
+                    "kind": "damage", "dmg_min": 10, "dmg_max": 18, "verb": "lance of frost"},
+    "veil": {"class": "mage", "type": "spell", "level_req": 20, "cost": 18, "learn_cost": 150,
+             "kind": "invisibility", "duration": 90, "verb": "a veil of unseeing"},
+    "mind_spike": {"class": "mage", "type": "spell", "level_req": 35, "cost": 20, "learn_cost": 250,
+                   "kind": "damage", "dmg_min": 18, "dmg_max": 28, "verb": "spike of pure thought"},
+    "arcane_bolt": {"class": "mage", "type": "spell", "level_req": 50, "cost": 26, "learn_cost": 400,
+                    "kind": "damage", "dmg_min": 26, "dmg_max": 40, "verb": "arcane bolt"},
+    "font_of_mana": {"class": "mage", "type": "spell", "level_req": 65, "cost": 0, "learn_cost": 550,
+                      "kind": "mana_restore", "amount_min": 30, "amount_max": 50, "verb": "the font of mana"},
+    "shatter_ward": {"class": "mage", "type": "spell", "level_req": 80, "cost": 36, "learn_cost": 750,
+                      "kind": "damage", "dmg_min": 40, "dmg_max": 60, "verb": "wave of shattering force"},
+    "arcane_nova": {"class": "mage", "type": "spell", "level_req": 95, "cost": 45, "learn_cost": 1000,
+                    "kind": "damage", "dmg_min": 55, "dmg_max": 80, "verb": "nova of raw arcane force"},
+
+    # ---- Cleric spells ----
+    "heal": {"class": "cleric", "type": "spell", "level_req": 1, "cost": 10, "learn_cost": 0,
+             "kind": "heal", "heal_min": 12, "heal_max": 22, "verb": "channel divine light"},
+    "bless": {"class": "cleric", "type": "spell", "level_req": 5, "cost": 8, "learn_cost": 30,
+              "kind": "buff_dmg", "amount": 3, "duration": 60, "verb": "Bless"},
+    "mend": {"class": "cleric", "type": "spell", "level_req": 12, "cost": 16, "learn_cost": 80,
+             "kind": "heal", "heal_min": 22, "heal_max": 34, "verb": "channel mending light"},
+    "smite": {"class": "cleric", "type": "spell", "level_req": 20, "cost": 14, "learn_cost": 150,
+              "kind": "damage", "dmg_min": 12, "dmg_max": 20, "verb": "radiant smite"},
+    "ward": {"class": "cleric", "type": "spell", "level_req": 35, "cost": 14, "learn_cost": 250,
+             "kind": "buff_armor", "amount": 4, "duration": 60, "verb": "Ward"},
+    "greater_heal": {"class": "cleric", "type": "spell", "level_req": 50, "cost": 24, "learn_cost": 400,
+                      "kind": "heal", "heal_min": 36, "heal_max": 54, "verb": "channel radiant light"},
+    "sanctuary": {"class": "cleric", "type": "spell", "level_req": 65, "cost": 0, "learn_cost": 550,
+                  "kind": "full_restore", "verb": "Sanctuary"},
+    "judgment": {"class": "cleric", "type": "spell", "level_req": 80, "cost": 32, "learn_cost": 750,
+                 "kind": "damage", "dmg_min": 36, "dmg_max": 56, "verb": "lance of judgment"},
+    "divine_grace": {"class": "cleric", "type": "spell", "level_req": 95, "cost": 40, "learn_cost": 1000,
+                      "kind": "heal", "heal_min": 70, "heal_max": 100, "verb": "channel divine grace"},
+
+    # ---- Warrior skills ----
+    "bash": {"class": "warrior", "type": "skill", "level_req": 1, "cooldown": 6, "learn_cost": 0,
+             "kind": "attack_bonus", "bonus_min": 4, "bonus_max": 8, "verb": "bash"},
+    "rally": {"class": "warrior", "type": "skill", "level_req": 5, "cooldown": 30, "learn_cost": 30,
+              "kind": "buff_dmg", "amount": 4, "duration": 30, "verb": "rally"},
+    "cleave": {"class": "warrior", "type": "skill", "level_req": 12, "cooldown": 8, "learn_cost": 80,
+               "kind": "attack_bonus", "bonus_min": 8, "bonus_max": 14, "verb": "cleave"},
+    "guard_stance": {"class": "warrior", "type": "skill", "level_req": 20, "cooldown": 30, "learn_cost": 150,
+                      "kind": "buff_armor", "amount": 5, "duration": 45, "verb": "guard stance"},
+    "second_wind": {"class": "warrior", "type": "skill", "level_req": 35, "cooldown": 60, "learn_cost": 250,
+                     "kind": "self_heal", "heal_min": 20, "heal_max": 35, "verb": "second wind"},
+    "relentless_strike": {"class": "warrior", "type": "skill", "level_req": 50, "cooldown": 10, "learn_cost": 400,
+                            "kind": "attack_bonus", "bonus_min": 16, "bonus_max": 24, "verb": "relentless strike"},
+    "battle_shout": {"class": "warrior", "type": "skill", "level_req": 65, "cooldown": 45, "learn_cost": 550,
+                       "kind": "buff_dmg", "amount": 8, "duration": 45, "verb": "battle shout"},
+    "execute": {"class": "warrior", "type": "skill", "level_req": 80, "cooldown": 12, "learn_cost": 750,
+                "kind": "attack_bonus", "bonus_min": 20, "bonus_max": 30, "execute_mult": 3, "verb": "execute"},
+    "warlords_fury": {"class": "warrior", "type": "skill", "level_req": 95, "cooldown": 15, "learn_cost": 1000,
+                        "kind": "attack_bonus", "bonus_min": 30, "bonus_max": 45, "verb": "warlord's fury"},
+
+    # ---- Rogue skills ----
+    "backstab": {"class": "rogue", "type": "skill", "level_req": 1, "cooldown": 0, "learn_cost": 0,
+                 "kind": "backstab", "mult": 3, "verb": "backstab"},
+    "stealth": {"class": "rogue", "type": "skill", "level_req": 5, "cooldown": 30, "learn_cost": 30,
+                "kind": "invisibility", "duration": 60, "verb": "stealth"},
+    "vanish": {"class": "rogue", "type": "skill", "level_req": 12, "cooldown": 45, "learn_cost": 80,
+               "kind": "vanish", "duration": 20, "verb": "vanish"},
+    "poison_blade": {"class": "rogue", "type": "skill", "level_req": 20, "cooldown": 10, "learn_cost": 150,
+                      "kind": "attack_bonus", "bonus_min": 10, "bonus_max": 16, "verb": "poison blade"},
+    "dirty_trick": {"class": "rogue", "type": "skill", "level_req": 35, "cooldown": 8, "learn_cost": 250,
+                     "kind": "attack_bonus", "bonus_min": 14, "bonus_max": 22, "verb": "dirty trick"},
+    "shadowstep": {"class": "rogue", "type": "skill", "level_req": 50, "cooldown": 20, "learn_cost": 400,
+                    "kind": "backstab", "mult": 4, "ignore_target": True, "verb": "shadowstep"},
+    "ambush": {"class": "rogue", "type": "skill", "level_req": 65, "cooldown": 25, "learn_cost": 550,
+               "kind": "backstab", "mult": 5, "verb": "ambush"},
+    "assassinate": {"class": "rogue", "type": "skill", "level_req": 80, "cooldown": 30, "learn_cost": 750,
+                      "kind": "backstab", "mult": 6, "verb": "assassinate"},
+    "master_thiefs_strike": {"class": "rogue", "type": "skill", "level_req": 95, "cooldown": 35, "learn_cost": 1000,
+                                "kind": "backstab", "mult": 8, "verb": "a master thief's strike"},
 }
 
 HELP_TEXT = (
@@ -30,8 +114,11 @@ HELP_TEXT = (
     "&nbsp;&nbsp;get &lt;item&gt;, drop &lt;item&gt;, wear/wield &lt;item&gt;, remove &lt;item&gt;<br>"
     "&nbsp;&nbsp;quaff/drink &lt;item&gt; &mdash; consume a potion or ration<br>"
     "&nbsp;&nbsp;kill &lt;target&gt;, flee, rest, wake<br>"
-    "&nbsp;&nbsp;cast &lt;spell&gt; [target] &mdash; mage: missile, cleric: heal<br>"
-    "&nbsp;&nbsp;bash &lt;target&gt; (warrior), backstab &lt;target&gt; (rogue)<br>"
+    "&nbsp;&nbsp;cast &lt;spell&gt; [target] &mdash; mage/cleric spells you've learned<br>"
+    "&nbsp;&nbsp;bash &lt;target&gt; (warrior), backstab &lt;target&gt; (rogue) &mdash; starter skills<br>"
+    "&nbsp;&nbsp;use &lt;skill&gt; [target] &mdash; any other warrior/rogue skill you've learned<br>"
+    "&nbsp;&nbsp;skills &mdash; see your class's full ability list and what you've learned<br>"
+    "&nbsp;&nbsp;learn &lt;ability&gt; &mdash; learn a spell/skill from your guild's trainer (must be present, leveled up, and pay the fee)<br>"
     "&nbsp;&nbsp;list, buy &lt;item&gt;, sell &lt;item&gt; &mdash; in shops<br>"
     "&nbsp;&nbsp;pray &mdash; at the Temple of the Dawn<br>"
     "&nbsp;&nbsp;open chest &mdash; where applicable<br>"
@@ -116,7 +203,7 @@ async def dispatch(ctx: CommandContext, raw: str):
         await do_wear(ctx, arg)
     elif cmd == "remove":
         await do_remove(ctx, arg)
-    elif cmd in ("quaff", "drink", "use"):
+    elif cmd in ("quaff", "drink"):
         await do_quaff(ctx, arg)
     elif cmd in ("kill", "attack", "k"):
         await do_kill(ctx, arg)
@@ -132,6 +219,12 @@ async def dispatch(ctx: CommandContext, raw: str):
         await do_bash(ctx, arg)
     elif cmd == "backstab":
         await do_backstab(ctx, arg)
+    elif cmd == "use":
+        await do_use(ctx, arg)
+    elif cmd in ("skills", "spells", "abilities"):
+        await do_skills(ctx)
+    elif cmd == "learn":
+        await do_learn(ctx, arg)
     elif cmd == "list":
         await do_list(ctx)
     elif cmd == "buy":
@@ -189,9 +282,12 @@ async def do_move(ctx, direction):
     if not dest_id:
         await ctx.engine.send(p, c.error("You can't go that way."))
         return
-    await ctx.engine.send_room(p.room_id, c.system(f"{p.name} leaves {direction}."), exclude_names=(p.name,))
+    invisible = time.time() < p.invisible_until
+    if not invisible:
+        await ctx.engine.send_room(p.room_id, c.system(f"{p.name} leaves {direction}."), exclude_names=(p.name,))
     p.room_id = dest_id
-    await ctx.engine.send_room(dest_id, c.system(f"{p.name} arrives."), exclude_names=(p.name,))
+    if not invisible:
+        await ctx.engine.send_room(dest_id, c.system(f"{p.name} arrives."), exclude_names=(p.name,))
     await do_look(ctx, "")
 
 
@@ -200,6 +296,12 @@ async def do_look(ctx, arg):
     room = ctx.world.get_room(p.room_id)
 
     if arg:
+        if room.trainer and arg.lower() in room.trainer.name.lower():
+            t = room.trainer
+            await ctx.engine.send(
+                p, f"{c.player(t.name)}, {c.esc(t.title)} of the {c.esc(t.klass.capitalize())}s' Guild "
+                   f"(level {t.level}).<br>{c.esc(t.description)}")
+            return
         mob = ctx.engine.find_mob_in_room(p.room_id, arg)
         if mob:
             tmpl = ctx.world.get_mob_template(mob.template_id)
@@ -221,11 +323,18 @@ async def do_look(ctx, arg):
     exits = ", ".join(sorted(room.exits.keys())) or "none"
     lines.append(f"Exits: {c.exit_(exits)}")
 
+    if room.trainer:
+        t = room.trainer
+        lines.append(f"{c.player(t.name)}, {c.esc(t.title)} of the {c.esc(t.klass.capitalize())}s' Guild, is here.")
+
     for m in ctx.engine.mobs_in_room(room.id):
         tmpl = ctx.world.get_mob_template(m.template_id)
         lines.append(f"{c.mob(tmpl.name.capitalize())} is here.")
 
+    now = time.time()
     for other in ctx.engine.players_in_room(room.id, exclude=p.name):
+        if now < other.invisible_until and not p.is_admin:
+            continue
         lines.append(f"{c.player(other.name)} is here.")
 
     for iid in ctx.engine.ground.get(room.id, []):
@@ -285,7 +394,8 @@ async def do_shout(ctx, arg):
 async def do_who(ctx):
     p = ctx.player
     online = [x for x in ctx.engine.players.values() if x.connected]
-    lines = [c.help_(f"Players online ({len(online)}):")]
+    lines = [c.help_(f"Players online ({len(online)}):")
+]
     for other in online:
         tag = f" {c.admin('[admin]')}" if other.is_admin else ""
         lines.append(f"&nbsp;&nbsp;{c.player(other.name)} &mdash; level {other.level} {other.race} {other.klass}{tag}")
@@ -507,18 +617,26 @@ async def do_cast(ctx, arg):
     parts = arg.split(None, 1)
     spell = parts[0].lower()
     target_kw = parts[1].strip() if len(parts) > 1 else ""
-    spec = SPELLS.get(spell)
-    if not spec:
+    spec = ABILITIES.get(spell)
+    if not spec or spec["type"] != "spell":
         await ctx.engine.send(p, c.error("You don't know that spell."))
         return
     if p.klass != spec["class"]:
         await ctx.engine.send(p, c.error("You don't know how to cast that."))
         return
+    if spell not in p.known_skills:
+        await ctx.engine.send(p, c.error("You haven't learned that spell yet."))
+        return
+    if p.level < spec["level_req"]:
+        await ctx.engine.send(p, c.error(f"You must be level {spec['level_req']} to cast that."))
+        return
     if p.mana < spec["cost"]:
         await ctx.engine.send(p, c.error("You don't have enough mana."))
         return
 
-    if spec["kind"] == "damage":
+    kind = spec["kind"]
+
+    if kind == "damage":
         room = ctx.world.get_room(p.room_id)
         if room.safe:
             await ctx.engine.send(p, c.error("You can't start a fight here."))
@@ -535,13 +653,13 @@ async def do_cast(ctx, arg):
         mob.hp -= dmg
         p.in_combat_with = mob.instance_id
         mob.target_name = p.name
-        await ctx.engine.send(p, f"Your missile of force strikes {c.mob(tmpl.name)} for {c.dmg(dmg)} damage!")
-        await ctx.engine.send_room(p.room_id, f"{c.player(p.name)} hurls a missile of force at {c.mob(tmpl.name)}!",
+        await ctx.engine.send(p, f"Your {spec['verb']} strikes {c.mob(tmpl.name)} for {c.dmg(dmg)} damage!")
+        await ctx.engine.send_room(p.room_id, f"{c.player(p.name)} hurls {spec['verb']} at {c.mob(tmpl.name)}!",
                                     exclude_names=(p.name,))
         if mob.hp <= 0:
             await ctx.engine.resolve_mob_death(mob, tmpl, p)
 
-    elif spec["kind"] == "heal":
+    elif kind == "heal":
         target = p
         if target_kw:
             other = ctx.engine.find_player_in_room(p.room_id, target_kw)
@@ -550,9 +668,52 @@ async def do_cast(ctx, arg):
         p.mana -= spec["cost"]
         amount = random.randint(spec["heal_min"], spec["heal_max"])
         target.hp = min(target.max_hp, target.hp + amount)
-        await ctx.engine.send(p, f"You channel divine light, healing {c.heal(amount)} points.")
+        await ctx.engine.send(p, f"You {spec['verb']}, healing {c.heal(amount)} points.")
         if target is not p:
             await ctx.engine.send(target, f"{c.player(p.name)} heals you for {c.heal(amount)} points.")
+
+    elif kind == "buff_dmg":
+        target = p
+        if target_kw:
+            other = ctx.engine.find_player_in_room(p.room_id, target_kw)
+            if other:
+                target = other
+        p.mana -= spec["cost"]
+        target.dmg_buff_until = time.time() + spec["duration"]
+        target.dmg_buff_amount = spec["amount"]
+        await ctx.engine.send(p, f"You cast {spec['verb']}!")
+        if target is not p:
+            await ctx.engine.send(target, f"{c.player(p.name)} casts {spec['verb']} on you!")
+
+    elif kind == "buff_armor":
+        target = p
+        if target_kw:
+            other = ctx.engine.find_player_in_room(p.room_id, target_kw)
+            if other:
+                target = other
+        p.mana -= spec["cost"]
+        target.armor_buff_until = time.time() + spec["duration"]
+        target.armor_buff_amount = spec["amount"]
+        await ctx.engine.send(p, f"You cast {spec['verb']}!")
+        if target is not p:
+            await ctx.engine.send(target, f"{c.player(p.name)} casts {spec['verb']} on you!")
+
+    elif kind == "invisibility":
+        p.mana -= spec["cost"]
+        p.invisible_until = time.time() + spec["duration"]
+        await ctx.engine.send(p, f"You weave {spec['verb']} and fade from sight for {spec['duration']}s.")
+
+    elif kind == "mana_restore":
+        p.mana -= spec["cost"]
+        amount = random.randint(spec["amount_min"], spec["amount_max"])
+        p.mana = min(p.max_mana, p.mana + amount)
+        await ctx.engine.send(p, f"You draw upon {spec['verb']}, restoring {c.tag(str(amount), 'c-mana')} mana.")
+
+    elif kind == "full_restore":
+        p.mana -= spec["cost"]
+        p.hp = p.max_hp
+        p.mana = p.max_mana
+        await ctx.engine.send(p, f"You invoke {spec['verb']}! You are fully restored.")
 
 
 async def do_bash(ctx, arg):
@@ -618,6 +779,190 @@ async def do_backstab(ctx, arg):
         return
     p.in_combat_with = mob.instance_id
     mob.target_name = p.name
+
+
+async def do_use(ctx, arg):
+    """Generic use for any learned warrior/rogue skill other than the
+    starter bash/backstab (which keep their own dedicated commands, though
+    'use bash <target>'/'use backstab <target>' are routed through to them
+    here too for convenience)."""
+    p = ctx.player
+    if not arg:
+        await ctx.engine.send(p, c.error("Use what skill?"))
+        return
+    parts = arg.split(None, 1)
+    skill = parts[0].lower()
+    target_kw = parts[1].strip() if len(parts) > 1 else ""
+
+    if skill == "bash":
+        await do_bash(ctx, target_kw)
+        return
+    if skill == "backstab":
+        await do_backstab(ctx, target_kw)
+        return
+
+    spec = ABILITIES.get(skill)
+    if not spec or spec["type"] != "skill":
+        await ctx.engine.send(p, c.error("You don't know that skill."))
+        return
+    if p.klass != spec["class"]:
+        await ctx.engine.send(p, c.error("You don't know how to use that."))
+        return
+    if skill not in p.known_skills:
+        await ctx.engine.send(p, c.error("You haven't learned that skill yet."))
+        return
+    if p.level < spec["level_req"]:
+        await ctx.engine.send(p, c.error(f"You must be level {spec['level_req']} to use that."))
+        return
+    now = time.time()
+    ready_at = p.skill_cooldowns.get(skill, 0.0)
+    if now < ready_at:
+        await ctx.engine.send(p, c.error(f"You aren't ready to do that again ({int(ready_at - now)}s)."))
+        return
+
+    kind = spec["kind"]
+
+    if kind == "attack_bonus":
+        room = ctx.world.get_room(p.room_id)
+        if room.safe:
+            await ctx.engine.send(p, c.error("You can't start a fight here."))
+            return
+        mob = ctx.engine.mobs.get(p.in_combat_with) if p.in_combat_with else None
+        if not mob and target_kw:
+            mob = ctx.engine.find_mob_in_room(p.room_id, target_kw)
+        if not mob:
+            await ctx.engine.send(p, c.error(f"Use {spec['verb']} on what?"))
+            return
+        tmpl = ctx.world.get_mob_template(mob.template_id)
+        bonus = random.randint(spec["bonus_min"], spec["bonus_max"])
+        dmg = ctx.engine.roll_player_damage(p) + bonus
+        if spec.get("execute_mult") and mob.hp <= mob.max_hp * 0.2:
+            dmg *= spec["execute_mult"]
+        mob.hp -= dmg
+        p.in_combat_with = mob.instance_id
+        mob.target_name = p.name
+        p.skill_cooldowns[skill] = now + spec["cooldown"]
+        await ctx.engine.send(p, f"You {spec['verb']} {c.mob(tmpl.name)} for {c.dmg(dmg)} damage!")
+        await ctx.engine.send_room(p.room_id, f"{c.player(p.name)} uses {spec['verb']} on {c.mob(tmpl.name)}!",
+                                    exclude_names=(p.name,))
+        if mob.hp <= 0:
+            await ctx.engine.resolve_mob_death(mob, tmpl, p)
+
+    elif kind == "backstab":
+        ignore = spec.get("ignore_target", False)
+        if p.in_combat_with and not ignore:
+            await ctx.engine.send(p, c.error("You can only do that from outside combat."))
+            return
+        mob = ctx.engine.mobs.get(p.in_combat_with) if p.in_combat_with else None
+        if not mob and target_kw:
+            mob = ctx.engine.find_mob_in_room(p.room_id, target_kw)
+        if not mob:
+            await ctx.engine.send(p, c.error(f"Use {spec['verb']} on what?"))
+            return
+        if mob.target_name and mob.target_name != p.name and not ignore:
+            await ctx.engine.send(p, c.error("It's already fighting someone -- too risky to sneak up now."))
+            return
+        tmpl = ctx.world.get_mob_template(mob.template_id)
+        dmg = ctx.engine.roll_player_damage(p) * spec["mult"]
+        mob.hp -= dmg
+        p.skill_cooldowns[skill] = now + spec["cooldown"]
+        await ctx.engine.send(p, f"You {spec['verb']} {c.mob(tmpl.name)} for {c.dmg(dmg)} damage!")
+        await ctx.engine.send_room(p.room_id, f"{c.player(p.name)} uses {spec['verb']} on {c.mob(tmpl.name)}!",
+                                    exclude_names=(p.name,))
+        if mob.hp <= 0:
+            await ctx.engine.resolve_mob_death(mob, tmpl, p)
+            return
+        p.in_combat_with = mob.instance_id
+        mob.target_name = p.name
+
+    elif kind == "buff_dmg":
+        p.dmg_buff_until = now + spec["duration"]
+        p.dmg_buff_amount = spec["amount"]
+        p.skill_cooldowns[skill] = now + spec["cooldown"]
+        await ctx.engine.send(p, f"You use {spec['verb']}! Your attacks are empowered for {spec['duration']}s.")
+        await ctx.engine.send_room(p.room_id, f"{c.player(p.name)} uses {spec['verb']}!", exclude_names=(p.name,))
+
+    elif kind == "buff_armor":
+        p.armor_buff_until = now + spec["duration"]
+        p.armor_buff_amount = spec["amount"]
+        p.skill_cooldowns[skill] = now + spec["cooldown"]
+        await ctx.engine.send(p, f"You use {spec['verb']}! Your defenses are bolstered for {spec['duration']}s.")
+        await ctx.engine.send_room(p.room_id, f"{c.player(p.name)} uses {spec['verb']}!", exclude_names=(p.name,))
+
+    elif kind == "self_heal":
+        amount = random.randint(spec["heal_min"], spec["heal_max"])
+        p.hp = min(p.max_hp, p.hp + amount)
+        p.skill_cooldowns[skill] = now + spec["cooldown"]
+        await ctx.engine.send(p, f"You use {spec['verb']}, recovering {c.heal(amount)} hp.")
+
+    elif kind in ("invisibility", "vanish"):
+        duration = spec["duration"]
+        p.invisible_until = now + duration
+        p.skill_cooldowns[skill] = now + spec["cooldown"]
+        if kind == "vanish" and p.in_combat_with:
+            inst = ctx.engine.mobs.get(p.in_combat_with)
+            if inst:
+                inst.target_name = None
+            p.in_combat_with = None
+        await ctx.engine.send(p, f"You use {spec['verb']} and fade from sight for {duration}s.")
+        await ctx.engine.send_room(p.room_id, c.system(f"{p.name} vanishes!"), exclude_names=(p.name,))
+
+
+async def do_skills(ctx):
+    p = ctx.player
+    own = sorted(
+        ((aid, spec) for aid, spec in ABILITIES.items() if spec["class"] == p.klass),
+        key=lambda pair: pair[1]["level_req"],
+    )
+    label = "spells" if p.klass in ("mage", "cleric") else "skills"
+    lines = [c.help_(f"Your {label} ({p.klass}):")]
+    for aid, spec in own:
+        known = aid in p.known_skills
+        if known:
+            status = c.heal("known")
+        elif p.level < spec["level_req"]:
+            status = c.error(f"requires level {spec['level_req']}")
+        else:
+            status = f"learnable from your guild trainer ({c.gold(spec['learn_cost'])} gold)"
+        cost = f"{spec['cost']} mana" if spec["type"] == "spell" else (
+            f"{spec['cooldown']}s cooldown" if spec["cooldown"] else "no cooldown")
+        lines.append(f"&nbsp;&nbsp;{c.esc(aid)} (lvl {spec['level_req']}, {cost}) &mdash; {status}")
+    await ctx.engine.send(p, "<br>".join(lines))
+
+
+async def do_learn(ctx, arg):
+    p = ctx.player
+    if not arg:
+        await ctx.engine.send(p, c.error("Learn what?"))
+        return
+    skill = arg.strip().lower()
+    spec = ABILITIES.get(skill)
+    if not spec or spec["class"] != p.klass:
+        await ctx.engine.send(p, c.error("That isn't one of your class's abilities."))
+        return
+    room = ctx.world.get_room(p.room_id)
+    trainer = room.trainer
+    if not trainer or trainer.klass != p.klass:
+        await ctx.engine.send(p, c.error("There's no trainer here to teach you that."))
+        return
+    if skill in p.known_skills:
+        await ctx.engine.send(p, c.error("You already know that."))
+        return
+    if p.level < spec["level_req"]:
+        await ctx.engine.send(p, c.error(f"{trainer.name} shakes their head: \"Come back at level {spec['level_req']}.\""))
+        return
+    cost = spec["learn_cost"]
+    if p.gold < cost:
+        await ctx.engine.send(p, c.error(f"{trainer.name} wants {c.gold(cost)} gold for that -- you don't have enough."))
+        return
+    p.gold -= cost
+    p.known_skills.append(skill)
+    verb = spec["verb"]
+    word = "spell" if spec["type"] == "spell" else "skill"
+    if cost:
+        await ctx.engine.send(p, f"{c.player(trainer.name)} teaches you the {word} {c.help_(verb)} for {c.gold(cost)} gold.")
+    else:
+        await ctx.engine.send(p, f"{c.player(trainer.name)} teaches you the {word} {c.help_(verb)}.")
 
 
 # ---------------------------------------------------------------------------
@@ -822,7 +1167,8 @@ async def do_rooms(ctx):
     if not p.is_admin:
         await ctx.engine.send(p, c.error("You don't have the authority to do that."))
         return
-    lines = [c.admin(f"Rooms ({len(ctx.world.rooms)}):")]
+    lines = [c.admin(f"Rooms ({len(ctx.world.rooms)}):")
+]
     for rid in sorted(ctx.world.rooms.keys()):
         room = ctx.world.rooms[rid]
         lines.append(f"&nbsp;&nbsp;{rid} &mdash; {c.esc(room.name)}")
