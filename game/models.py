@@ -2,7 +2,8 @@
 Data structures for Saltspire MUD.
 
 Templates (Room, ItemTemplate, MobTemplate) are static, loaded once from
-data/world.json. Instances (MobInstance, Player) are runtime/mutable state.
+data/items.json, data/mobs.json, and data/rooms_1.json/rooms_2.json (see
+game/world.py). Instances (MobInstance, Player) are runtime/mutable state.
 """
 from __future__ import annotations
 from dataclasses import dataclass, field
