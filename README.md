@@ -19,7 +19,7 @@ Saltspire was founded roughly 340 years ago by "the First Hundred," refugees who
 - Shops (buy/sell) in 10+ locations, a healer you can `pray` to, and several locked/unlocked containers
 - Leveling, persistent characters (JSON file per player), say/emote/shout/who
 - A minimal vanilla-JS browser terminal frontend — no build step, no frameworks
-- Password-protected logins (salted PBKDF2 hashes, no plaintext anywhere) with a self-service `changepass`, and an admin role that can reset anyone's password and build new rooms in-game without hand-editing `data/world.json`
+- Password-protected logins (salted PBKDF2 hashes, no plaintext anywhere) with a self-service `changepass`, and an admin role that can reset anyone's password and build new rooms in-game without hand-editing the world data files
 
 ## Requirements
 
@@ -70,7 +70,7 @@ The sewers still lead to the goblin lair, but now continue much further down int
 
 ## Admin role & building rooms in-game
 
-Characters with `is_admin: true` get an extra set of commands (shown in their own `help` block) for account recovery and for extending the map without ever hand-editing `data/world.json`.
+Characters with `is_admin: true` get an extra set of commands (shown in their own `help` block) for account recovery and for extending the map without ever hand-editing the world data files.
 
 **Bootstrapping the first admin.** Nobody can grant admin in-game until at least one admin already exists, so create the first one from the server's shell (not in the browser):
 
@@ -89,7 +89,7 @@ If `<name>` doesn't exist yet, this creates it (race/klass default to human/warr
 | `setpass <character> <newpassword>` | Reset any character's password, online or offline |
 | `makeadmin <character> on\|off` | Grant or revoke admin |
 
-**Building commands** (admin only) — every change here is written straight back to `data/world.json` (atomically, so a crash mid-save can't corrupt it), so it survives a server restart:
+**Building commands** (admin only) — every change here is written straight back to the world data files (atomically, so a crash mid-save can't corrupt them), so it survives a server restart:
 
 | Command | Effect |
 |---|---|
@@ -111,11 +111,15 @@ saltspire-mud/
   main.py              FastAPI app + WebSocket endpoint (login, character creation, game loop)
   create_admin.py      CLI script to bootstrap/recover an admin character (run outside the live game)
   requirements.txt
-  data/world.json       All rooms, mobs, and items -- also the save target for in-game room building
-  build_world.py        One-off generator script used to expand the original world into its current size (safe to re-run; re-applies the same data)
+  data/
+    items.json           All item templates
+    mobs.json             All mob templates
+    rooms_1.json, rooms_2.json   All rooms, split across two files to keep each one small -- also the save target for in-game room building (re-sharded alphabetically on every save)
+    world.json             Legacy monolithic format, no longer read unless items.json is missing (kept only for old checkouts)
+  build_world.py        One-off generator script used to expand the original world into its current size (safe to re-run; re-applies the same data; reads/writes the split files above)
   game/
     models.py           Player/Room/MobTemplate/etc. dataclasses
-    world.py             Loads data/world.json, and saves it back out for OLC building commands
+    world.py             Loads data/items.json, data/mobs.json, data/rooms_1.json, data/rooms_2.json, and saves them back out for OLC building commands
     engine.py            Live game state + combat/respawn/regen tick loop
     commands.py          Command parsing and every do_* handler
     persistence.py       JSON-file save/load for characters
