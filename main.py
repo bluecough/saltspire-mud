@@ -11,7 +11,7 @@ import os
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 from game import auth
 from game import colors as c
@@ -49,6 +49,11 @@ BANNER = (
 @app.get("/")
 async def index():
     return FileResponse(os.path.join(STATIC_DIR, "index.html"))
+
+
+@app.get("/health")
+async def health():
+    return JSONResponse({"status": "ok", "players_online": len(engine.players)})
 
 
 @app.on_event("startup")
