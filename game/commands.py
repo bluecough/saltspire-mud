@@ -25,8 +25,10 @@ HELP_TEXT = (
     "Available commands:<br>"
     "&nbsp;&nbsp;movement: north/south/east/west/up/down (n/s/e/w/u/d)<br>"
     "&nbsp;&nbsp;look [target], score, inventory (i), equipment (eq)<br>"
+    "&nbsp;&nbsp;lore (history) &mdash; read the deeper history of where you stand, if any<br>"
     "&nbsp;&nbsp;say &lt;msg&gt;, emote &lt;action&gt;, shout &lt;msg&gt;, who<br>"
     "&nbsp;&nbsp;get &lt;item&gt;, drop &lt;item&gt;, wear/wield &lt;item&gt;, remove &lt;item&gt;<br>"
+    "&nbsp;&nbsp;quaff/drink &lt;item&gt; &mdash; consume a potion or ration<br>"
     "&nbsp;&nbsp;kill &lt;target&gt;, flee, rest, wake<br>"
     "&nbsp;&nbsp;cast &lt;spell&gt; [target] &mdash; mage: missile, cleric: heal<br>"
     "&nbsp;&nbsp;bash &lt;target&gt; (warrior), backstab &lt;target&gt; (rogue)<br>"
@@ -45,6 +47,7 @@ ADMIN_HELP_TEXT = (
     "&nbsp;&nbsp;rlink &lt;direction&gt; &lt;room_id&gt; &mdash; link an exit to an existing room (one-way)<br>"
     "&nbsp;&nbsp;runlink &lt;direction&gt; &mdash; remove an exit from the current room<br>"
     "&nbsp;&nbsp;rname &lt;text&gt;, rdesc &lt;text&gt; &mdash; rename / redescribe the current room<br>"
+    "&nbsp;&nbsp;rlore &lt;text&gt; &mdash; set the current room's 'lore' text (read with the lore command)<br>"
     "&nbsp;&nbsp;rsafe on|off &mdash; toggle whether combat is allowed in the current room<br>"
     "&nbsp;&nbsp;setpass &lt;character&gt; &lt;newpassword&gt; &mdash; reset anyone's password<br>"
     "&nbsp;&nbsp;makeadmin &lt;character&gt; on|off &mdash; grant/revoke admin"
@@ -89,6 +92,8 @@ async def dispatch(ctx: CommandContext, raw: str):
         await do_move(ctx, DIRECTIONS[cmd])
     elif cmd in ("look", "l"):
         await do_look(ctx, arg)
+    elif cmd in ("lore", "history"):
+        await do_lore(ctx)
     elif cmd == "say":
         await do_say(ctx, arg)
     elif cmd == "emote":
@@ -111,6 +116,8 @@ async def dispatch(ctx: CommandContext, raw: str):
         await do_wear(ctx, arg)
     elif cmd == "remove":
         await do_remove(ctx, arg)
+    elif cmd in ("quaff", "drink", "use"):
+        await do_quaff(ctx, arg)
     elif cmd in ("kill", "attack", "k"):
         await do_kill(ctx, arg)
     elif cmd == "flee":
@@ -155,6 +162,8 @@ async def dispatch(ctx: CommandContext, raw: str):
         await do_rname(ctx, arg)
     elif cmd == "rdesc":
         await do_rdesc(ctx, arg)
+    elif cmd == "rlore":
+        await do_rlore(ctx, arg)
     elif cmd == "rsafe":
         await do_rsafe(ctx, arg)
     elif cmd in ("help", "?"):
@@ -229,8 +238,19 @@ async def do_look(ctx, arg):
         lines.append(c.help_("You may 'pray' here to be healed."))
     if room.container and not ctx.engine.is_container_opened(room.id):
         lines.append(c.item(f"There is {room.container.name} here. (try 'open chest')"))
+    if room.lore:
+        lines.append(c.help_("There's a deeper history here. (try 'lore')"))
 
     await ctx.engine.send(p, "<br>".join(lines))
+
+
+async def do_lore(ctx):
+    p = ctx.player
+    room = ctx.world.get_room(p.room_id)
+    if not room.lore:
+        await ctx.engine.send(p, c.system("There's nothing more to learn here."))
+        return
+    await ctx.engine.send(p, f"{c.help_('You recall what you know of this place:')}<br>{c.esc(room.lore)}")
 
 
 # ---------------------------------------------------------------------------
@@ -380,6 +400,39 @@ async def do_remove(ctx, arg):
             del p.equipment[slot]
     tmpl = ctx.world.get_item(iid)
     await ctx.engine.send(p, f"You remove {c.item(tmpl.name)}.")
+
+
+async def do_quaff(ctx, arg):
+    p = ctx.player
+    if not arg:
+        await ctx.engine.send(p, c.error("Quaff what?"))
+        return
+    iid = _match_item_in_list(ctx, p.inventory, arg)
+    if not iid:
+        await ctx.engine.send(p, c.error("You aren't carrying that."))
+        return
+    tmpl = ctx.world.get_item(iid)
+    if tmpl.slot != "consumable":
+        await ctx.engine.send(p, c.error(f"You can't quaff {tmpl.name}."))
+        return
+    p.inventory.remove(iid)
+    parts = []
+    if tmpl.heal:
+        before = p.hp
+        p.hp = min(p.max_hp, p.hp + tmpl.heal)
+        restored = p.hp - before
+        if restored:
+            parts.append(f"{c.heal(str(restored))} hp")
+    if tmpl.mana:
+        before = p.mana
+        p.mana = min(p.max_mana, p.mana + tmpl.mana)
+        restored = p.mana - before
+        if restored:
+            parts.append(f"{c.tag(str(restored), 'c-mana')} mana")
+    if parts:
+        await ctx.engine.send(p, f"You quaff {c.item(tmpl.name)}, restoring {' and '.join(parts)}.")
+    else:
+        await ctx.engine.send(p, f"You consume {c.item(tmpl.name)}. It doesn't seem to do anything.")
 
 
 # ---------------------------------------------------------------------------
@@ -891,6 +944,20 @@ async def do_rdesc(ctx, arg):
     current.description = arg.strip()
     ctx.world.save()
     await ctx.engine.send(p, c.admin("Room description updated."))
+
+
+async def do_rlore(ctx, arg):
+    p = ctx.player
+    if not p.is_admin:
+        await ctx.engine.send(p, c.error("You don't have the authority to do that."))
+        return
+    if not arg:
+        await ctx.engine.send(p, c.error("Usage: rlore &lt;text&gt; (empty text clears it -- use rlore - to clear)"))
+        return
+    current = ctx.world.get_room(p.room_id)
+    current.lore = "" if arg.strip() == "-" else arg.strip()
+    ctx.world.save()
+    await ctx.engine.send(p, c.admin("Room lore updated." if current.lore else "Room lore cleared."))
 
 
 async def do_rsafe(ctx, arg):
