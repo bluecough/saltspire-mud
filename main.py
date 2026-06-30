@@ -38,12 +38,27 @@ MAX_LOGIN_ATTEMPTS = 5
 # input box to type="password" and avoid echoing it into the scrollback.
 CTRL_PREFIX = "\x00CTRL\x00"
 
-BANNER = (
+_FALLBACK_BANNER = (
     "================================================<br>"
     "&nbsp;&nbsp;SALTSPIRE &mdash; a small browser MUD<br>"
     "&nbsp;&nbsp;(in the style of classic Diku/Merc/ROM MUDs)<br>"
     "================================================<br>"
 )
+
+
+def _load_banner() -> str:
+    """Load banner.txt from the project root and wrap in <pre> so ASCII art
+    whitespace is preserved.  Falls back to a plain text banner if the file
+    is missing or unreadable."""
+    banner_path = os.path.join(BASE_DIR, "banner.txt")
+    try:
+        with open(banner_path, "r") as fh:
+            return "<pre>" + fh.read() + "</pre>"
+    except OSError:
+        return _FALLBACK_BANNER
+
+
+BANNER = _load_banner()
 
 
 @app.get("/")
