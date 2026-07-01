@@ -1,4 +1,0 @@
-{
-  "_deprecated": true,
-  "_note": "This monolithic file is no longer used. World data now lives in data/items.json, data/mobs.json, data/rooms_1.json, and data/rooms_2.json (see game/world.py). This file is kept only as a placeholder because the GitHub connector available in this session has no delete-file tool -- it is safe to delete manually."
-}
