@@ -146,11 +146,13 @@ async def ws_endpoint(websocket: WebSocket):
                     existing.password_hash, existing.password_salt = auth.hash_password(pw1)
                     persistence.save(existing)
                     player = existing
+                    persistence.record_login(player.name, websocket.client.host if websocket.client else "unknown", "login")
                     await websocket.send_text(c.system(f"Password set. Welcome back, {name}."))
                 else:
                     pw = await ask_secret(websocket, "Password:")
                     if auth.verify_password(pw, existing.password_salt, existing.password_hash):
                         player = existing
+                        persistence.record_login(player.name, websocket.client.host if websocket.client else "unknown", "login")
                         await websocket.send_text(c.system(f"Welcome back, {name}."))
                     else:
                         key = name.lower()
@@ -194,6 +196,7 @@ async def ws_endpoint(websocket: WebSocket):
 
                 player = Player.new_character(name, race, klass, password_hash=pw_hash, password_salt=pw_salt)
                 persistence.save(player)
+                persistence.record_login(player.name, websocket.client.host if websocket.client else "unknown", "register")
                 await websocket.send_text(c.system(
                     f"Welcome, {name} the {race} {klass}! You awaken in The Rusty Anchor."))
 

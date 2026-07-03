@@ -109,3 +109,67 @@ def set_registration_locked(locked: bool) -> None:
     cfg = _load_server_config()
     cfg["registration_locked"] = locked
     _save_server_config(cfg)
+
+
+# ---------------------------------------------------------------------------
+# Login history
+# ---------------------------------------------------------------------------
+
+LOGIN_HISTORY_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "login_history.json"
+)
+DEFAULT_HISTORY_SIZE = 200
+
+
+def _load_login_history_data() -> dict:
+    if os.path.isfile(LOGIN_HISTORY_PATH):
+        with open(LOGIN_HISTORY_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {"max_size": DEFAULT_HISTORY_SIZE, "entries": []}
+
+
+def _save_login_history_data(data: dict) -> None:
+    os.makedirs(os.path.dirname(LOGIN_HISTORY_PATH), exist_ok=True)
+    tmp = LOGIN_HISTORY_PATH + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+    os.replace(tmp, LOGIN_HISTORY_PATH)
+
+
+def record_login(name: str, ip: str, action: str = "login") -> None:
+    """Record a login or registration event. action is 'login' or 'register'."""
+    import time
+    data = _load_login_history_data()
+    data["entries"].append({
+        "name": name,
+        "time": int(time.time()),
+        "action": action,
+        "ip": ip or "unknown",
+    })
+    max_size = int(data.get("max_size", DEFAULT_HISTORY_SIZE))
+    if max_size > 0:
+        data["entries"] = data["entries"][-max_size:]
+    _save_login_history_data(data)
+
+
+def get_login_history(limit: int | None = None) -> list[dict]:
+    """Return login entries newest-first. limit caps the result count."""
+    data = _load_login_history_data()
+    entries = list(reversed(data.get("entries", [])))
+    if limit is not None:
+        entries = entries[:limit]
+    return entries
+
+
+def get_login_history_size() -> int:
+    """Return the configured max history size (0 = unlimited)."""
+    return int(_load_login_history_data().get("max_size", DEFAULT_HISTORY_SIZE))
+
+
+def set_login_history_size(n: int) -> None:
+    """Set max history size and trim existing entries if needed."""
+    data = _load_login_history_data()
+    data["max_size"] = n
+    if n > 0:
+        data["entries"] = data["entries"][-n:]
+    _save_login_history_data(data)
