@@ -144,7 +144,9 @@ ADMIN_HELP_TEXT = (
     "&nbsp;&nbsp;rlore &lt;text&gt; &mdash; set the current room's 'lore' text (read with the lore command)<br>"
     "&nbsp;&nbsp;rsafe on|off &mdash; toggle whether combat is allowed in the current room<br>"
     "&nbsp;&nbsp;setpass &lt;character&gt; &lt;newpassword&gt; &mdash; reset anyone's password<br>"
-    "&nbsp;&nbsp;makeadmin &lt;character&gt; on|off &mdash; grant/revoke admin"
+    "&nbsp;&nbsp;makeadmin &lt;character&gt; on|off &mdash; grant/revoke admin<br>"
+    "&nbsp;&nbsp;setmaxplayers &lt;n&gt; &mdash; cap total accounts (0 = unlimited)<br>"
+    "&nbsp;&nbsp;lockregistration on|off &mdash; block/allow new account creation"
 )
 
 
@@ -262,6 +264,10 @@ async def dispatch(ctx: CommandContext, raw: str):
         await do_setpass(ctx, arg)
     elif cmd == "makeadmin":
         await do_makeadmin(ctx, arg)
+    elif cmd == "setmaxplayers":
+        await do_setmaxplayers(ctx, arg)
+    elif cmd == "lockregistration":
+        await do_lockregistration(ctx, arg)
     elif cmd == "rooms":
         await do_rooms(ctx)
     elif cmd == "goto":
@@ -462,7 +468,7 @@ async def do_who(ctx):
     p = ctx.player
     online = [x for x in ctx.engine.players.values() if x.connected]
     lines = [c.help_(f"Players online ({len(online)}):")
-    ]
+]
     for other in online:
         tag = f" {c.admin('[admin]')}" if other.is_admin else ""
         lines.append(f"&nbsp;&nbsp;{c.player(other.name)} &mdash; level {other.level} {other.race} {other.klass}{tag}")
@@ -982,8 +988,7 @@ async def do_skills(ctx):
         key=lambda pair: pair[1]["level_req"],
     )
     label = "spells" if p.klass in ("mage", "cleric") else "skills"
-    lines = [c.help_(f"Your {label} ({p.klass}):")
-    ]
+    lines = [c.help_(f"Your {label} ({p.klass}):")]
     for aid, spec in own:
         known = aid in p.known_skills
         if known:
@@ -1294,7 +1299,7 @@ async def do_listplayers(ctx):
         return
     online_set = {n.lower() for n in ctx.engine.players}
     lines = [c.admin(f"Saved characters ({len(names)}):")
-    ]
+]
     for name in names:
         char = persistence.load(name)
         if char:
@@ -1410,7 +1415,7 @@ async def do_rooms(ctx):
         await ctx.engine.send(p, c.error("You don't have the authority to do that."))
         return
     lines = [c.admin(f"Rooms ({len(ctx.world.rooms)}):")
-    ]
+]
     for rid in sorted(ctx.world.rooms.keys()):
         room = ctx.world.rooms[rid]
         lines.append(f"&nbsp;&nbsp;{rid} &mdash; {c.esc(room.name)}")
@@ -1561,3 +1566,44 @@ async def do_rsafe(ctx, arg):
     current.safe = (flag == "on")
     ctx.world.save()
     await ctx.engine.send(p, c.admin(f"This room is now {'safe' if current.safe else 'unsafe'}."))
+
+
+async def do_setmaxplayers(ctx, arg):
+    p = ctx.player
+    if not p.is_admin:
+        await ctx.engine.send(p, c.error("You don't have the authority to do that."))
+        return
+    try:
+        n = int((arg or "").strip())
+        if n < 0:
+            raise ValueError
+    except ValueError:
+        await ctx.engine.send(p, c.error("Usage: setmaxplayers &lt;n&gt;  (0 = unlimited)"))
+        return
+    persistence.set_max_players(n)
+    if n == 0:
+        await ctx.engine.send(p, c.admin("Player cap removed -- new accounts allowed without limit."))
+    else:
+        current_count = len(persistence.list_players())
+        await ctx.engine.send(p, c.admin(
+            f"Player cap set to {n}. Current count: {current_count}/{n}."
+        ))
+
+
+async def do_lockregistration(ctx, arg):
+    p = ctx.player
+    if not p.is_admin:
+        await ctx.engine.send(p, c.error("You don't have the authority to do that."))
+        return
+    flag = (arg or "").strip().lower()
+    if flag not in ("on", "off"):
+        await ctx.engine.send(p, c.error("Usage: lockregistration on|off"))
+        return
+    locked = (flag == "on")
+    persistence.set_registration_locked(locked)
+    if locked:
+        await ctx.engine.send(p, c.admin(
+            "Registration LOCKED. No new accounts can be created until you run 'lockregistration off'."
+        ))
+    else:
+        await ctx.engine.send(p, c.admin("Registration OPEN. New accounts are allowed."))
