@@ -61,3 +61,51 @@ def delete_player(name: str) -> bool:
         os.remove(path)
         return True
     return False
+
+
+# ---------------------------------------------------------------------------
+# Server configuration (player cap, registration lock)
+# ---------------------------------------------------------------------------
+
+SERVER_CONFIG_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "server_config.json"
+)
+
+
+def _load_server_config() -> dict:
+    if os.path.isfile(SERVER_CONFIG_PATH):
+        with open(SERVER_CONFIG_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {"max_players": 0, "registration_locked": False}
+
+
+def _save_server_config(cfg: dict) -> None:
+    os.makedirs(os.path.dirname(SERVER_CONFIG_PATH), exist_ok=True)
+    tmp = SERVER_CONFIG_PATH + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(cfg, f, indent=2)
+    os.replace(tmp, SERVER_CONFIG_PATH)
+
+
+def get_max_players() -> int:
+    """Return the player cap. 0 = unlimited."""
+    return int(_load_server_config().get("max_players", 0))
+
+
+def set_max_players(n: int) -> None:
+    """Set the player cap. 0 = unlimited."""
+    cfg = _load_server_config()
+    cfg["max_players"] = n
+    _save_server_config(cfg)
+
+
+def is_registration_locked() -> bool:
+    """Return True if new account creation is blocked."""
+    return bool(_load_server_config().get("registration_locked", False))
+
+
+def set_registration_locked(locked: bool) -> None:
+    """Block or allow new account creation."""
+    cfg = _load_server_config()
+    cfg["registration_locked"] = locked
+    _save_server_config(cfg)

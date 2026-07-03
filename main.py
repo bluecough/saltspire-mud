@@ -165,6 +165,16 @@ async def ws_endpoint(websocket: WebSocket):
                             f"Incorrect password. ({failed_attempts[key]}/{MAX_LOGIN_ATTEMPTS} attempts)"))
                         continue
             else:
+                if persistence.is_registration_locked():
+                    await websocket.send_text(c.error(
+                        "New account creation is currently disabled by the administrator."))
+                    continue
+                max_p = persistence.get_max_players()
+                if max_p > 0 and len(persistence.list_players()) >= max_p:
+                    await websocket.send_text(c.error(
+                        f"The server has reached its player limit ({max_p}). "
+                        "No new accounts can be created at this time."))
+                    continue
                 confirm = await ask(
                     websocket, f"'{name}' is unknown. Create a new character with that name? (yes/no)")
                 if confirm.lower() not in ("y", "yes"):
