@@ -1,0 +1,8 @@
+services:
+  saltspire:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./players:/app/players
+    restart: unless-stopped

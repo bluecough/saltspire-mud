@@ -1,0 +1,332 @@
+{
+  "rusty_dagger": {
+    "name": "a rusty dagger",
+    "description": "A pitted iron dagger, more rust than blade, but it still holds an edge.",
+    "slot": "weapon",
+    "dmg_min": 1,
+    "dmg_max": 4,
+    "armor": 0,
+    "heal": 0,
+    "mana": 0,
+    "value": 5
+  },
+  "short_sword": {
+    "name": "a short sword",
+    "description": "A well-balanced soldier's blade with a leather-wrapped grip.",
+    "slot": "weapon",
+    "dmg_min": 2,
+    "dmg_max": 6,
+    "armor": 0,
+    "heal": 0,
+    "mana": 0,
+    "value": 25
+  },
+  "oak_staff": {
+    "name": "an oak staff",
+    "description": "A gnarled staff of oak, faintly warm to the touch.",
+    "slot": "weapon",
+    "dmg_min": 1,
+    "dmg_max": 5,
+    "armor": 0,
+    "heal": 0,
+    "mana": 0,
+    "value": 20
+  },
+  "wooden_shield": {
+    "name": "a wooden shield",
+    "description": "A round shield banded in iron, scarred from old fights.",
+    "slot": "shield",
+    "dmg_min": 0,
+    "dmg_max": 0,
+    "armor": 1,
+    "heal": 0,
+    "mana": 0,
+    "value": 15
+  },
+  "leather_armor": {
+    "name": "a suit of leather armor",
+    "description": "Worn but sturdy leather armor, smelling faintly of tallow.",
+    "slot": "armor",
+    "dmg_min": 0,
+    "dmg_max": 0,
+    "armor": 2,
+    "heal": 0,
+    "mana": 0,
+    "value": 30
+  },
+  "chainmail": {
+    "name": "a shirt of chainmail",
+    "description": "Interlocking steel rings, heavy but reliable.",
+    "slot": "armor",
+    "dmg_min": 0,
+    "dmg_max": 0,
+    "armor": 4,
+    "heal": 0,
+    "mana": 0,
+    "value": 80
+  },
+  "healing_potion": {
+    "name": "a healing potion",
+    "description": "A small vial of red liquid that smells faintly of crushed herbs.",
+    "slot": "consumable",
+    "dmg_min": 0,
+    "dmg_max": 0,
+    "armor": 0,
+    "heal": 20,
+    "mana": 0,
+    "value": 10
+  },
+  "iron_key": {
+    "name": "a tarnished iron key",
+    "description": "An old iron key, green with verdigris. It looks important.",
+    "slot": "key",
+    "dmg_min": 0,
+    "dmg_max": 0,
+    "armor": 0,
+    "heal": 0,
+    "mana": 0,
+    "value": 0
+  },
+  "goblin_ear": {
+    "name": "a severed goblin ear",
+    "description": "A grisly trophy, still faintly twitching.",
+    "slot": "treasure",
+    "dmg_min": 0,
+    "dmg_max": 0,
+    "armor": 0,
+    "heal": 0,
+    "mana": 0,
+    "value": 2
+  },
+  "tarnished_crown": {
+    "name": "a tarnished silver crown",
+    "description": "A small silver crown, dented and tarnished, taken from a locked chest.",
+    "slot": "treasure",
+    "dmg_min": 0,
+    "dmg_max": 0,
+    "armor": 0,
+    "heal": 0,
+    "mana": 0,
+    "value": 50
+  },
+  "steel_longsword": {
+    "name": "a steel longsword",
+    "description": "A keep-quartermaster's blade, straight and well-oiled, stamped with the Concord's anchor sigil.",
+    "slot": "weapon",
+    "dmg_min": 3,
+    "dmg_max": 8,
+    "value": 60
+  },
+  "tower_shield": {
+    "name": "a tower shield",
+    "description": "A heavy iron-banded shield, tall enough to crouch behind.",
+    "slot": "shield",
+    "armor": 3,
+    "value": 70
+  },
+  "plate_armor": {
+    "name": "a suit of plate armor",
+    "description": "Polished steel plate, the kind only a Warden's guard is issued.",
+    "slot": "armor",
+    "armor": 6,
+    "value": 150
+  },
+  "warden_seal": {
+    "name": "a tarnished warden's seal",
+    "description": "A wax-seal stamp bearing the Harbor Concord's anchor -- it has no business being on a renegade guard.",
+    "slot": "treasure",
+    "value": 40
+  },
+  "fishhook_knife": {
+    "name": "a fishhook knife",
+    "description": "A short, curved gutting blade, more tool than weapon, but it'll do in a pinch.",
+    "slot": "weapon",
+    "dmg_min": 1,
+    "dmg_max": 3,
+    "value": 8
+  },
+  "ships_log": {
+    "name": "a water-stained ship's log",
+    "description": "A logbook gone soft with damp. The last entries describe cargo that was never declared to the harbormaster.",
+    "slot": "treasure",
+    "value": 15
+  },
+  "stolen_ledger": {
+    "name": "a stolen ledger",
+    "description": "Names, weights, and prices in a cramped hand -- a record the Undertow would pay dearly to get back.",
+    "slot": "treasure",
+    "value": 35
+  },
+  "undertow_signet": {
+    "name": "an undertow signet ring",
+    "description": "A black iron ring etched with a wave swallowing a coin -- the mark of the dockside syndicate.",
+    "slot": "treasure",
+    "value": 55
+  },
+  "spyglass": {
+    "name": "a brass spyglass",
+    "description": "A dented but functional spyglass, its lens still clear.",
+    "slot": "treasure",
+    "value": 25
+  },
+  "tin_amulet": {
+    "name": "a cheap tin amulet",
+    "description": "A worthless little charm, sold to sailors who want to believe it's lucky.",
+    "slot": "treasure",
+    "value": 18
+  },
+  "vael_sigil": {
+    "name": "a corroded vael sigil",
+    "description": "A coin-sized disc of green-black metal, warm to the touch. It fits a lock somewhere in the drowned ruins.",
+    "slot": "key",
+    "value": 0
+  },
+  "tide_idol": {
+    "name": "a small tide idol",
+    "description": "A carved figure, half-eroded, of a many-armed shape rising from waves.",
+    "slot": "treasure",
+    "value": 45
+  },
+  "drowned_crown": {
+    "name": "the drowned crown",
+    "description": "A crown of fused coral and silver, salt-crusted, heavier than it looks. Old Vael's last king wore this.",
+    "slot": "treasure",
+    "value": 220
+  },
+  "vael_trident": {
+    "name": "a vael war-trident",
+    "description": "A barbed bronze trident, etched with spiraling script no living scholar can fully read.",
+    "slot": "weapon",
+    "dmg_min": 5,
+    "dmg_max": 12,
+    "value": 160
+  },
+  "tidewarden_heart": {
+    "name": "the tidewarden's heart",
+    "description": "A fist-sized lump of something between coral and crystal, still faintly pulsing with cold light.",
+    "slot": "treasure",
+    "value": 120
+  },
+  "warden_femur_blade": {
+    "name": "a femur blade",
+    "description": "A short sword crudely ground from bone, dark with age. It feels wrong to hold.",
+    "slot": "weapon",
+    "dmg_min": 4,
+    "dmg_max": 9,
+    "value": 90
+  },
+  "grave_gold": {
+    "name": "a handful of grave gold",
+    "description": "Coins buried with the dead, green with tarnish and best spent far from Temple Row.",
+    "slot": "treasure",
+    "value": 60
+  },
+  "padded_tunic": {
+    "name": "a padded tunic",
+    "description": "Quilted cloth armor, light enough to wear under a cloak.",
+    "slot": "armor",
+    "armor": 1,
+    "value": 12
+  },
+  "woolen_cloak": {
+    "name": "a woolen cloak",
+    "description": "A traveler's cloak, dyed a deep harbor-grey.",
+    "slot": "armor",
+    "armor": 1,
+    "value": 18
+  },
+  "soothing_tonic": {
+    "name": "a soothing tonic",
+    "description": "A bitter apothecary's draught that settles the stomach and the nerves alike.",
+    "slot": "consumable",
+    "heal": 10,
+    "value": 8
+  },
+  "greater_healing_potion": {
+    "name": "a greater healing potion",
+    "description": "A larger, darker vial than the common healing potion -- the apothecary's strongest brew.",
+    "slot": "consumable",
+    "heal": 40,
+    "value": 25
+  },
+  "mana_draught": {
+    "name": "a mana draught",
+    "description": "A faintly luminous blue liquid that smells of crushed quartz.",
+    "slot": "consumable",
+    "mana": 20,
+    "value": 20
+  },
+  "garnet_ring": {
+    "name": "a garnet ring",
+    "description": "A simple gold band set with a deep red stone, catching what little light there is.",
+    "slot": "treasure",
+    "value": 70
+  },
+  "engraved_locket": {
+    "name": "an engraved locket",
+    "description": "A locket engraved with initials that mean nothing to anyone left in Saltspire.",
+    "slot": "treasure",
+    "value": 50
+  },
+  "dried_rations": {
+    "name": "dried rations",
+    "description": "Salted fish and hard biscuit, wrapped in oilcloth. Filling, if not appetizing.",
+    "slot": "consumable",
+    "heal": 6,
+    "value": 3
+  },
+  "fishing_net": {
+    "name": "a fishing net",
+    "description": "A coil of tarred netting, mended many times over.",
+    "slot": "treasure",
+    "value": 10
+  },
+  "sentinels_badge": {
+    "name": "a sentinel's badge",
+    "description": "A corroded badge from a watch disbanded long before anyone alive remembers why.",
+    "slot": "treasure",
+    "value": 30
+  },
+  "captains_cutlass": {
+    "name": "the red tide captain's cutlass",
+    "description": "A curved blade with a basket hilt, still sharp despite two centuries under the salt fields.",
+    "slot": "weapon",
+    "dmg_min": 4,
+    "dmg_max": 10,
+    "value": 120
+  },
+  "red_tide_standard": {
+    "name": "a tattered red tide standard",
+    "description": "A faded banner, once carried by a pirate fleet that broke itself against Saltspire's founders.",
+    "slot": "treasure",
+    "value": 100
+  },
+  "drake_scale": {
+    "name": "an ash-scaled drake scale",
+    "description": "A single scale, the size of a shield, still warm and smelling faintly of cinders.",
+    "slot": "treasure",
+    "value": 250
+  },
+  "ashwing_fang": {
+    "name": "an ashwing fang",
+    "description": "A drake's fang as long as a forearm, the edge wickedly serrated.",
+    "slot": "weapon",
+    "dmg_min": 7,
+    "dmg_max": 15,
+    "value": 300
+  },
+  "hag_eye": {
+    "name": "a hag's preserved eye",
+    "description": "Kept in a jar of murky brine, it seems to track you even now.",
+    "slot": "treasure",
+    "value": 90
+  },
+  "fen_mothers_staff": {
+    "name": "the fen mother's staff",
+    "description": "A gnarled staff wound with river reeds and small bones, still humming faintly with old magic.",
+    "slot": "weapon",
+    "dmg_min": 4,
+    "dmg_max": 10,
+    "value": 150
+  }
+}

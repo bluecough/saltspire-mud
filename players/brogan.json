@@ -1,0 +1,29 @@
+{
+  "name": "Brogan",
+  "race": "human",
+  "klass": "warrior",
+  "level": 1,
+  "xp": 8,
+  "gold": 20,
+  "hp": 30,
+  "max_hp": 30,
+  "mana": 0,
+  "max_mana": 0,
+  "room_id": "sewer_entrance",
+  "inventory": [
+    "rusty_dagger",
+    "leather_armor",
+    "healing_potion"
+  ],
+  "equipment": {
+    "weapon": "rusty_dagger",
+    "armor": "leather_armor"
+  },
+  "stats": {
+    "str": 10,
+    "dex": 10,
+    "con": 10,
+    "int": 10,
+    "wis": 10
+  }
+}
