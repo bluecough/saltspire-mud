@@ -128,6 +128,7 @@ ADMIN_HELP_TEXT = (
     "&nbsp;&nbsp;listplayers &mdash; list all saved characters<br>"
     "&nbsp;&nbsp;setlevel &lt;character&gt; &lt;level&gt; &mdash; set a character's level<br>"
     "&nbsp;&nbsp;setstat &lt;character&gt; &lt;stat&gt; &lt;value&gt; &mdash; set str/dex/con/int/wis (1-25)<br>"
+    "&nbsp;&nbsp;loginhistory [n] &mdash; show last n logins/registrations (default 20)<br>"
     "<br>Admin-only commands:<br>"
     "&nbsp;&nbsp;deleteplayer &lt;character&gt; &mdash; permanently delete a saved character<br>"
     "&nbsp;&nbsp;makeassistant &lt;character&gt; on|off &mdash; grant/revoke assistant admin<br>"
@@ -143,6 +144,7 @@ ADMIN_HELP_TEXT = (
     "&nbsp;&nbsp;makeadmin &lt;character&gt; on|off &mdash; grant/revoke admin<br>"
     "&nbsp;&nbsp;setmaxplayers &lt;n&gt; &mdash; cap total accounts (0 = unlimited)<br>"
     "&nbsp;&nbsp;lockregistration on|off &mdash; block/allow new account creation<br>"
+    "&nbsp;&nbsp;setloginhistory &lt;n&gt; &mdash; set max login history entries (0 = unlimited)<br>"
     "&nbsp;&nbsp;checkai &mdash; test connectivity to the Ollama NPC AI server"
 )
 
@@ -267,6 +269,10 @@ async def dispatch(ctx: CommandContext, raw: str):
         await do_setmaxplayers(ctx, arg)
     elif cmd == "lockregistration":
         await do_lockregistration(ctx, arg)
+    elif cmd == "loginhistory":
+        await do_loginhistory(ctx, arg)
+    elif cmd == "setloginhistory":
+        await do_setloginhistory(ctx, arg)
     elif cmd == "checkai":
         await do_checkai(ctx)
     elif cmd == "rooms":
@@ -466,7 +472,7 @@ async def do_shout(ctx, arg):
 async def do_who(ctx):
     p = ctx.player
     online = [x for x in ctx.engine.players.values() if x.connected]
-    lines = [c.help_(f"Players online ({len(online)}):")]
+    lines = [c.help_(f"Players online ({len(online)}):" )]
     for other in online:
         tag = f" {c.admin('[admin]')}" if other.is_admin else ""
         lines.append(f"&nbsp;&nbsp;{c.player(other.name)} &mdash; level {other.level} {other.race} {other.klass}{tag}")
@@ -974,7 +980,7 @@ async def do_skills(ctx):
         key=lambda pair: pair[1]["level_req"],
     )
     label = "spells" if p.klass in ("mage", "cleric") else "skills"
-    lines = [c.help_(f"Your {label} ({p.klass}):")]
+    lines = [c.help_(f"Your {label} ({p.klass}):" )]
     for aid, spec in own:
         known = aid in p.known_skills
         if known:
@@ -1269,7 +1275,7 @@ async def do_listplayers(ctx):
         await ctx.engine.send(p, c.admin("No saved characters found."))
         return
     online_set = {n.lower() for n in ctx.engine.players}
-    lines = [c.admin(f"Saved characters ({len(names)}):" )]
+    lines = [c.admin(f"Saved characters ({len(names)}):")]
     for name in names:
         char = persistence.load(name)
         if char:
@@ -1380,7 +1386,7 @@ async def do_rooms(ctx):
     if not p.is_admin:
         await ctx.engine.send(p, c.error("You don't have the authority to do that."))
         return
-    lines = [c.admin(f"Rooms ({len(ctx.world.rooms)}):")]
+    lines = [c.admin(f"Rooms ({len(ctx.world.rooms)}):" )]
     for rid in sorted(ctx.world.rooms.keys()):
         room = ctx.world.rooms[rid]
         lines.append(f"&nbsp;&nbsp;{rid} &mdash; {c.esc(room.name)}")
@@ -1695,6 +1701,52 @@ async def do_talk(ctx, arg):
 
     response = await npc_ai.get_npc_response(npc_type, npc_name, npc_desc, message, shop_inventory)
     await ctx.engine.send(p, f'{c.player(npc_name)} says, "{c.say(response)}"')
+
+
+async def do_loginhistory(ctx, arg):
+    """loginhistory [n] -- staff: show the last n login/registration events."""
+    import datetime
+    p = ctx.player
+    if not _is_staff(p):
+        await ctx.engine.send(p, c.error("You don't have the authority to do that."))
+        return
+    try:
+        limit = int(arg) if (arg or "").strip() else 20
+        if limit <= 0:
+            raise ValueError
+    except ValueError:
+        limit = 20
+    entries = persistence.get_login_history(limit)
+    if not entries:
+        await ctx.engine.send(p, c.admin("No login history recorded yet."))
+        return
+    lines = [c.admin(f"Login history (last {len(entries)}, newest first):")]
+    for e in entries:
+        ts = datetime.datetime.fromtimestamp(e["time"]).strftime("%Y-%m-%d %H:%M:%S")
+        action = c.heal("register") if e["action"] == "register" else "login"
+        lines.append(f"&nbsp;&nbsp;{ts} &mdash; {c.player(e['name'])} [{action}] from {c.esc(e['ip'])}")
+    await ctx.engine.send(p, "<br>".join(lines))
+
+
+async def do_setloginhistory(ctx, arg):
+    """setloginhistory <n> -- admin: set max login history size (0 = unlimited)."""
+    p = ctx.player
+    if not p.is_admin:
+        await ctx.engine.send(p, c.error("You don't have the authority to do that."))
+        return
+    try:
+        n = int((arg or "").strip())
+        if n < 0:
+            raise ValueError
+    except ValueError:
+        await ctx.engine.send(p, c.error("Usage: setloginhistory &lt;n&gt;  (0 = unlimited)"))
+        return
+    persistence.set_login_history_size(n)
+    current = persistence.get_login_history_size()
+    if n == 0:
+        await ctx.engine.send(p, c.admin("Login history size: unlimited."))
+    else:
+        await ctx.engine.send(p, c.admin(f"Login history size set to {n}. Current size: {current}."))
 
 
 async def do_checkai(ctx):
