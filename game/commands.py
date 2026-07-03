@@ -5,6 +5,7 @@ import random
 import time
 from . import auth
 from . import colors as c
+from . import npc_ai
 from . import persistence
 
 DIRECTIONS = {
@@ -122,6 +123,7 @@ HELP_TEXT = (
     "&nbsp;&nbsp;list, buy &lt;item&gt;, sell &lt;item&gt; &mdash; in shops<br>"
     "&nbsp;&nbsp;pray &mdash; at the Temple of the Dawn<br>"
     "&nbsp;&nbsp;open chest &mdash; where applicable<br>"
+    "&nbsp;&nbsp;talk &lt;npc&gt; [message] &mdash; speak with a trainer, shopkeeper, or priestess<br>"
     "&nbsp;&nbsp;changepass &lt;old&gt; &lt;new&gt;<br>"
     "&nbsp;&nbsp;help, quit"
 )
@@ -246,6 +248,8 @@ async def dispatch(ctx: CommandContext, raw: str):
         await do_pray(ctx)
     elif cmd == "open":
         await do_open(ctx, arg)
+    elif cmd == "talk":
+        await do_talk(ctx, arg)
     elif cmd == "changepass":
         await do_changepass(ctx, arg)
     elif cmd == "kick":
@@ -415,9 +419,11 @@ async def do_look(ctx, arg):
         lines.append(f"{c.item(tmpl.name)} is on the ground.")
 
     if room.shop:
-        lines.append(c.help_("The shopkeep eyes your coin purse. (try 'list', 'buy &lt;item&gt;')"))
+        lines.append(c.help_("The shopkeep eyes your coin purse. (try 'list', 'buy &lt;item&gt;', or 'talk shopkeeper')"))
     if "heal" in room.services:
-        lines.append(c.help_("You may 'pray' here to be healed."))
+        lines.append(c.help_("You may 'pray' here to be healed. The priestess is also willing to talk."))
+    if room.trainer:
+        lines.append(c.help_(f"(You can 'talk {room.trainer.name.split()[0].lower()}' to speak with the trainer.)"))
     if room.container and not ctx.engine.is_container_opened(room.id):
         lines.append(c.item(f"There is {room.container.name} here. (try 'open chest')"))
     if room.lore:
@@ -1607,3 +1613,81 @@ async def do_lockregistration(ctx, arg):
         ))
     else:
         await ctx.engine.send(p, c.admin("Registration OPEN. New accounts are allowed."))
+
+
+# ---------------------------------------------------------------------------
+# NPC dialogue (Ollama-backed with pre-scripted fallbacks)
+# ---------------------------------------------------------------------------
+
+# Aliases that map player keyword to npc_type + display name used when no
+# room.trainer exists (i.e. shopkeepers and priestesses are inferred from
+# room features, not explicit NPC objects).
+_SHOP_ALIASES   = frozenset({"shopkeeper", "shopkeep", "merchant", "vendor", "keeper", "shop"})
+_HEALER_ALIASES = frozenset({"priestess", "sister", "healer", "cleric", "priest", "dawn"})
+
+
+async def do_talk(ctx, arg):
+    """talk <npc> [message] -- speak with an NPC in the current room."""
+    p = ctx.player
+    room = ctx.world.get_room(p.room_id)
+
+    if not arg:
+        # List who is available to talk to
+        available = []
+        if room.trainer:
+            available.append(room.trainer.name)
+        if room.shop:
+            available.append("the shopkeeper")
+        if "heal" in room.services:
+            available.append("the priestess")
+        if not available:
+            await ctx.engine.send(p, c.system("There is no one here to talk to."))
+        else:
+            names = ", ".join(available)
+            await ctx.engine.send(p, c.help_(f"You could talk to: {names}. (usage: talk &lt;name&gt; &lt;message&gt;)"))
+        return
+
+    parts = arg.split(None, 1)
+    npc_keyword = parts[0].lower()
+    message = parts[1].strip() if len(parts) > 1 else "Hello."
+
+    # --- resolve NPC ---
+    npc_type: str | None = None
+    npc_name: str | None = None
+    npc_desc: str | None = None
+
+    # Trainer match (exact or partial first-word match)
+    if room.trainer:
+        trainer = room.trainer
+        t_first = trainer.name.split()[0].lower()
+        if npc_keyword in trainer.name.lower() or npc_keyword == t_first:
+            npc_type = f"{trainer.klass}_trainer"
+            npc_name = trainer.name
+            npc_desc = f"{trainer.title} of the {trainer.klass.capitalize()}s' Guild"
+
+    # Shopkeeper match
+    if npc_type is None and npc_keyword in _SHOP_ALIASES and room.shop:
+        npc_type = "shopkeeper"
+        npc_name = "the shopkeeper"
+        npc_desc = "a merchant who keeps shop here"
+
+    # Temple priestess match
+    if npc_type is None and npc_keyword in _HEALER_ALIASES and "heal" in room.services:
+        npc_type = "priestess"
+        npc_name = "the priestess"
+        npc_desc = "a priestess of the Temple of the Dawn"
+
+    if npc_type is None:
+        await ctx.engine.send(p, c.error("There is no one by that name to talk to here."))
+        return
+
+    # Show other players that a conversation is happening (no message content)
+    await ctx.engine.send_room(
+        p.room_id,
+        c.system(f"{p.name} speaks with {npc_name}."),
+        exclude_names=(p.name,),
+    )
+
+    # Get the NPC's response (Ollama or fallback)
+    response = await npc_ai.get_npc_response(npc_type, npc_name, npc_desc, message)
+    await ctx.engine.send(p, f'{c.player(npc_name)} says, "{c.say(response)}"')
