@@ -9,6 +9,13 @@ from __future__ import annotations
 import asyncio
 import os
 
+# Load .env for local development (no-op if file absent or python-dotenv not installed)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
@@ -90,13 +97,6 @@ async def ask_secret(websocket: WebSocket, prompt: str) -> str:
         raw = await websocket.receive_text()
         return raw.strip()
     finally:
-        # If the client disconnected while we were waiting (raw = await
-        # receive_text() above raises), the socket is already closed and this
-        # send would raise its own RuntimeError -- which, coming from a
-        # finally block, would replace the original WebSocketDisconnect and
-        # escape the `except WebSocketDisconnect` handler in ws_endpoint as an
-        # unhandled error. Swallow it: there's nothing useful to do with a
-        # closed socket, and we want the real disconnect exception to propagate.
         try:
             await websocket.send_text(CTRL_PREFIX + "PASSWORD_OFF")
         except Exception:
@@ -133,8 +133,6 @@ async def ws_endpoint(websocket: WebSocket):
             existing = persistence.load(name)
             if existing:
                 if not existing.password_hash:
-                    # Pre-password save (or one created before auth existed): let the
-                    # owner claim it by setting a password now, rather than locking them out.
                     await websocket.send_text(c.system(
                         f"'{name}' has no password set yet. Set one now to secure this character."))
                     pw1 = await ask_secret(websocket, "New password (4-64 characters):")
