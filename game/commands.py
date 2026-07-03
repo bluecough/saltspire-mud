@@ -17,13 +17,6 @@ OPPOSITE_DIRECTION = {
     "north": "south", "south": "north", "east": "west", "west": "east", "up": "down", "down": "up",
 }
 
-# Every spell (mage/cleric, mana-based, used via 'cast') and skill
-# (warrior/rogue, cooldown-based, used via 'use' -- bash/backstab keep their
-# own dedicated commands for backward compatibility but are also listed here
-# so 'skills'/'learn' see them). level_req 1 abilities are each class's
-# innate starter (see models.STARTER_SKILL) and never need to be learned;
-# everything else must be learned from that class's guild trainer with
-# 'learn <ability>', gated on level and a small gold training fee.
 ABILITIES = {
     # ---- Mage spells ----
     "missile": {"class": "mage", "type": "spell", "level_req": 1, "cost": 8, "learn_cost": 0,
@@ -148,7 +141,8 @@ ADMIN_HELP_TEXT = (
     "&nbsp;&nbsp;setpass &lt;character&gt; &lt;newpassword&gt; &mdash; reset anyone's password<br>"
     "&nbsp;&nbsp;makeadmin &lt;character&gt; on|off &mdash; grant/revoke admin<br>"
     "&nbsp;&nbsp;setmaxplayers &lt;n&gt; &mdash; cap total accounts (0 = unlimited)<br>"
-    "&nbsp;&nbsp;lockregistration on|off &mdash; block/allow new account creation"
+    "&nbsp;&nbsp;lockregistration on|off &mdash; block/allow new account creation<br>"
+    "&nbsp;&nbsp;checkai &mdash; test connectivity to the Ollama NPC AI server"
 )
 
 
@@ -272,6 +266,8 @@ async def dispatch(ctx: CommandContext, raw: str):
         await do_setmaxplayers(ctx, arg)
     elif cmd == "lockregistration":
         await do_lockregistration(ctx, arg)
+    elif cmd == "checkai":
+        await do_checkai(ctx)
     elif cmd == "rooms":
         await do_rooms(ctx)
     elif cmd == "goto":
@@ -441,10 +437,6 @@ async def do_lore(ctx):
     await ctx.engine.send(p, f"{c.help_('You recall what you know of this place:')}<br>{c.esc(room.lore)}")
 
 
-# ---------------------------------------------------------------------------
-# Communication
-# ---------------------------------------------------------------------------
-
 async def do_say(ctx, arg):
     p = ctx.player
     if not arg:
@@ -473,17 +465,12 @@ async def do_shout(ctx, arg):
 async def do_who(ctx):
     p = ctx.player
     online = [x for x in ctx.engine.players.values() if x.connected]
-    lines = [c.help_(f"Players online ({len(online)}):")
-]
+    lines = [c.help_(f"Players online ({len(online)}):")]
     for other in online:
         tag = f" {c.admin('[admin]')}" if other.is_admin else ""
         lines.append(f"&nbsp;&nbsp;{c.player(other.name)} &mdash; level {other.level} {other.race} {other.klass}{tag}")
     await ctx.engine.send(p, "<br>".join(lines))
 
-
-# ---------------------------------------------------------------------------
-# Inventory / equipment
-# ---------------------------------------------------------------------------
 
 async def do_inventory(ctx):
     p = ctx.player
@@ -623,10 +610,6 @@ async def do_quaff(ctx, arg):
     else:
         await ctx.engine.send(p, f"You consume {c.item(tmpl.name)}. It doesn't seem to do anything.")
 
-
-# ---------------------------------------------------------------------------
-# Combat
-# ---------------------------------------------------------------------------
 
 async def do_kill(ctx, arg):
     p = ctx.player
@@ -861,10 +844,6 @@ async def do_backstab(ctx, arg):
 
 
 async def do_use(ctx, arg):
-    """Generic use for any learned warrior/rogue skill other than the
-    starter bash/backstab (which keep their own dedicated commands, though
-    'use bash <target>'/'use backstab <target>' are routed through to them
-    here too for convenience)."""
     p = ctx.player
     if not arg:
         await ctx.engine.send(p, c.error("Use what skill?"))
@@ -1044,10 +1023,6 @@ async def do_learn(ctx, arg):
         await ctx.engine.send(p, f"{c.player(trainer.name)} teaches you the {word} {c.help_(verb)}.")
 
 
-# ---------------------------------------------------------------------------
-# Shops / services
-# ---------------------------------------------------------------------------
-
 async def do_list(ctx):
     p = ctx.player
     room = ctx.world.get_room(p.room_id)
@@ -1145,20 +1120,12 @@ async def do_open(ctx, arg):
     await ctx.engine.send_room(room.id, f"{c.player(p.name)} opens {cont.name}.", exclude_names=(p.name,))
 
 
-# ---------------------------------------------------------------------------
-# Session
-# ---------------------------------------------------------------------------
-
 async def do_quit(ctx):
     p = ctx.player
     persistence.save(p)
     await ctx.engine.send(p, c.system("Your progress is saved. Farewell, traveler."))
     raise QuitRequested()
 
-
-# ---------------------------------------------------------------------------
-# Password management
-# ---------------------------------------------------------------------------
 
 async def do_changepass(ctx, arg):
     p = ctx.player
@@ -1179,13 +1146,10 @@ async def do_changepass(ctx, arg):
 
 
 def _is_staff(player) -> bool:
-    """True for full admins and assistant admins."""
     return player.is_admin or getattr(player, "is_assistant_admin", False)
 
 
 def _find_target_player(ctx, name: str):
-    """Returns (player, is_online) for an online or offline character by name,
-    or (None, False) if no such character exists."""
     online = ctx.engine.players.get((name or "").lower())
     if online:
         return online, True
@@ -1304,8 +1268,7 @@ async def do_listplayers(ctx):
         await ctx.engine.send(p, c.admin("No saved characters found."))
         return
     online_set = {n.lower() for n in ctx.engine.players}
-    lines = [c.admin(f"Saved characters ({len(names)}):")
-]
+    lines = [c.admin(f"Saved characters ({len(names)}):")]
     for name in names:
         char = persistence.load(name)
         if char:
@@ -1411,17 +1374,12 @@ async def do_setstat(ctx, arg):
         await ctx.engine.send(target, c.admin(f"Your {stat} has been set to {new_val} by {p.name}."))
 
 
-# ---------------------------------------------------------------------------
-# Admin / building (OLC)
-# ---------------------------------------------------------------------------
-
 async def do_rooms(ctx):
     p = ctx.player
     if not p.is_admin:
         await ctx.engine.send(p, c.error("You don't have the authority to do that."))
         return
-    lines = [c.admin(f"Rooms ({len(ctx.world.rooms)}):")
-]
+    lines = [c.admin(f"Rooms ({len(ctx.world.rooms)}):")]
     for rid in sorted(ctx.world.rooms.keys()):
         room = ctx.world.rooms[rid]
         lines.append(f"&nbsp;&nbsp;{rid} &mdash; {c.esc(room.name)}")
@@ -1616,12 +1574,9 @@ async def do_lockregistration(ctx, arg):
 
 
 # ---------------------------------------------------------------------------
-# NPC dialogue (Ollama-backed with pre-scripted fallbacks)
+# NPC dialogue
 # ---------------------------------------------------------------------------
 
-# Aliases that map player keyword to npc_type + display name used when no
-# room.trainer exists (i.e. shopkeepers and priestesses are inferred from
-# room features, not explicit NPC objects).
 _SHOP_ALIASES   = frozenset({"shopkeeper", "shopkeep", "merchant", "vendor", "keeper", "shop"})
 _HEALER_ALIASES = frozenset({"priestess", "sister", "healer", "cleric", "priest", "dawn"})
 
@@ -1632,7 +1587,6 @@ async def do_talk(ctx, arg):
     room = ctx.world.get_room(p.room_id)
 
     if not arg:
-        # List who is available to talk to
         available = []
         if room.trainer:
             available.append(room.trainer.name)
@@ -1651,12 +1605,10 @@ async def do_talk(ctx, arg):
     npc_keyword = parts[0].lower()
     message = parts[1].strip() if len(parts) > 1 else "Hello."
 
-    # --- resolve NPC ---
     npc_type: str | None = None
     npc_name: str | None = None
     npc_desc: str | None = None
 
-    # Trainer match (exact or partial first-word match)
     if room.trainer:
         trainer = room.trainer
         t_first = trainer.name.split()[0].lower()
@@ -1665,13 +1617,11 @@ async def do_talk(ctx, arg):
             npc_name = trainer.name
             npc_desc = f"{trainer.title} of the {trainer.klass.capitalize()}s' Guild"
 
-    # Shopkeeper match
     if npc_type is None and npc_keyword in _SHOP_ALIASES and room.shop:
         npc_type = "shopkeeper"
         npc_name = "the shopkeeper"
         npc_desc = "a merchant who keeps shop here"
 
-    # Temple priestess match
     if npc_type is None and npc_keyword in _HEALER_ALIASES and "heal" in room.services:
         npc_type = "priestess"
         npc_name = "the priestess"
@@ -1681,13 +1631,45 @@ async def do_talk(ctx, arg):
         await ctx.engine.send(p, c.error("There is no one by that name to talk to here."))
         return
 
-    # Show other players that a conversation is happening (no message content)
     await ctx.engine.send_room(
         p.room_id,
         c.system(f"{p.name} speaks with {npc_name}."),
         exclude_names=(p.name,),
     )
 
-    # Get the NPC's response (Ollama or fallback)
     response = await npc_ai.get_npc_response(npc_type, npc_name, npc_desc, message)
     await ctx.engine.send(p, f'{c.player(npc_name)} says, "{c.say(response)}"')
+
+
+async def do_checkai(ctx):
+    """checkai -- admin: test connectivity to the Ollama NPC AI server."""
+    p = ctx.player
+    if not p.is_admin:
+        await ctx.engine.send(p, c.error("You don't have the authority to do that."))
+        return
+
+    await ctx.engine.send(p, c.system("Checking Ollama connection..."))
+    status = await npc_ai.check_ollama()
+
+    if status["ok"]:
+        model_tag = c.heal("available") if status["model_available"] else c.error("NOT pulled")
+        others = ", ".join(m for m in status["models"] if m != status["model"]) or "none"
+        lines = [
+            c.admin("Ollama NPC AI -- CONNECTED"),
+            f"&nbsp;&nbsp;URL: {c.esc(status['url'])}",
+            f"&nbsp;&nbsp;Configured model ({c.esc(status['model'])}): {model_tag}",
+            f"&nbsp;&nbsp;Other models on server: {c.esc(others)}",
+        ]
+        if not status["model_available"]:
+            lines.append(c.error(
+                f"  Run: docker exec -it &lt;ollama&gt; ollama pull {c.esc(status['model'])}"
+            ))
+    else:
+        lines = [
+            c.error("Ollama NPC AI -- UNREACHABLE (pre-scripted fallbacks active)"),
+            f"&nbsp;&nbsp;URL: {c.esc(status['url'])}",
+            f"&nbsp;&nbsp;Model: {c.esc(status['model'])}",
+            f"&nbsp;&nbsp;Error: {c.esc(status['error'])}",
+        ]
+
+    await ctx.engine.send(p, "<br>".join(lines))

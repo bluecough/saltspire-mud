@@ -188,7 +188,6 @@ _JAILBREAK_RESPONSES = [
 # Response sanitization
 # ---------------------------------------------------------------------------
 
-# Patterns that should never appear in NPC output
 _COMMAND_RE = re.compile(
     r"^\s*(north|south|east|west|up|down|n|s|e|w|u|d|look|l|kill|attack|k|cast|"
     r"bash|backstab|use|goto|dig|rlink|runlink|rname|rdesc|rlore|rsafe|"
@@ -200,7 +199,6 @@ _COMMAND_RE = re.compile(
     re.IGNORECASE | re.MULTILINE,
 )
 
-# Strip anything that smells like the model echoing back a system/user label
 _META_RE = re.compile(r"^\s*(system|user|assistant|human|npc)\s*:", re.IGNORECASE | re.MULTILINE)
 
 
@@ -246,7 +244,7 @@ async def _call_ollama(
 ) -> str | None:
     """POST to Ollama /api/chat. Returns sanitized text or None on any error."""
     try:
-        import httpx  # lazy import -- optional dependency
+        import httpx
     except ImportError:
         log.warning("httpx not installed; NPC AI disabled. pip install httpx")
         return None
@@ -281,6 +279,52 @@ async def _call_ollama(
         return None
 
 # ---------------------------------------------------------------------------
+# Admin health-check
+# ---------------------------------------------------------------------------
+
+async def check_ollama() -> dict:
+    """Ping the Ollama server and return a status dict.
+
+    Returns:
+        {
+            "ok":              bool,
+            "url":             str,       # OLLAMA_URL
+            "model":           str,       # OLLAMA_MODEL
+            "model_available": bool,      # model is pulled on the server (ok=True only)
+            "models":          list[str], # all pulled models (ok=True only)
+            "error":           str,       # error message (ok=False only)
+        }
+    """
+    try:
+        import httpx
+    except ImportError:
+        return {
+            "ok": False, "url": OLLAMA_URL, "model": OLLAMA_MODEL,
+            "error": "httpx not installed -- run: pip install httpx",
+        }
+    try:
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            resp = await client.get(f"{OLLAMA_URL}/api/tags")
+            resp.raise_for_status()
+            data = resp.json()
+            models = [m["name"] for m in data.get("models", [])]
+            target_base = OLLAMA_MODEL.split(":")[0]
+            model_available = any(
+                m == OLLAMA_MODEL or m.split(":")[0] == target_base
+                for m in models
+            )
+            return {
+                "ok": True, "url": OLLAMA_URL, "model": OLLAMA_MODEL,
+                "model_available": model_available, "models": models,
+            }
+    except Exception as exc:
+        return {
+            "ok": False, "url": OLLAMA_URL, "model": OLLAMA_MODEL,
+            "error": str(exc),
+        }
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -302,21 +346,17 @@ async def get_npc_response(
     profile = NPC_PERSONAS.get(npc_type, NPC_PERSONAS["generic"])
     fallbacks: list[str] = profile["fallbacks"]
 
-    # --- jailbreak gate (runs before we spend an Ollama call) ---
     if _JAILBREAK_RE.search(player_message):
         return random.choice(_JAILBREAK_RESPONSES)
 
-    # Build the persona string; some templates embed {name}
     raw_persona: str = profile["persona"]
     try:
         persona = raw_persona.format(name=npc_name)
     except KeyError:
         persona = raw_persona
 
-    # --- try Ollama ---
     result = await _call_ollama(npc_name, npc_description, persona, player_message)
     if result:
         return result
 
-    # --- pre-scripted fallback ---
     return random.choice(fallbacks)
