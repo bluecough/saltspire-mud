@@ -2,6 +2,7 @@
 do_* functions below, operating on a CommandContext (engine + player)."""
 from __future__ import annotations
 import random
+import re
 import time
 from . import auth
 from . import colors as c
@@ -1268,7 +1269,7 @@ async def do_listplayers(ctx):
         await ctx.engine.send(p, c.admin("No saved characters found."))
         return
     online_set = {n.lower() for n in ctx.engine.players}
-    lines = [c.admin(f"Saved characters ({len(names)}):")]
+    lines = [c.admin(f"Saved characters ({len(names)}):" )]
     for name in names:
         char = persistence.load(name)
         if char:
@@ -1580,6 +1581,28 @@ async def do_lockregistration(ctx, arg):
 _SHOP_ALIASES   = frozenset({"shopkeeper", "shopkeep", "merchant", "vendor", "keeper", "shop"})
 _HEALER_ALIASES = frozenset({"priestess", "sister", "healer", "cleric", "priest", "dawn"})
 
+_BUY_INTENT_RE = re.compile(
+    r"\b(buy|purchase|i'?ll take|i want to buy|get me|give me|i'?d like|can i (get|buy|have))\b",
+    re.IGNORECASE,
+)
+
+_BUY_CONFIRM = [
+    "Pleasure doing business. {gold} gold -- here you are.",
+    "Good choice. {gold} gold, and it's yours.",
+    "Here you go. {gold} gold. Come back any time.",
+    "Sold. {gold} gold. Finest quality, I assure you.",
+]
+_BUY_CANT_AFFORD = [
+    "That's {gold} gold. Come back when your purse is a little heavier.",
+    "I'm afraid I can't do charity. {gold} gold is the price. No haggling.",
+    "Short on coin? {gold} gold is what I need. No exceptions.",
+]
+_BUY_UNKNOWN = [
+    "Not sure what you're after. Have a look at what I carry -- try 'list'.",
+    "I don't think I stock that. Take a look at my wares with 'list'.",
+    "Can't say I have that. Check the list and tell me what catches your eye.",
+]
+
 
 async def do_talk(ctx, arg):
     """talk <npc> [message] -- speak with an NPC in the current room."""
@@ -1608,6 +1631,7 @@ async def do_talk(ctx, arg):
     npc_type: str | None = None
     npc_name: str | None = None
     npc_desc: str | None = None
+    shop_inventory: list[tuple[str, int]] | None = None
 
     if room.trainer:
         trainer = room.trainer
@@ -1621,6 +1645,11 @@ async def do_talk(ctx, arg):
         npc_type = "shopkeeper"
         npc_name = "the shopkeeper"
         npc_desc = "a merchant who keeps shop here"
+        shop_inventory = [
+            (ctx.world.get_item(iid).name, ctx.world.get_item(iid).value)
+            for iid in room.shop
+            if ctx.world.get_item(iid)
+        ]
 
     if npc_type is None and npc_keyword in _HEALER_ALIASES and "heal" in room.services:
         npc_type = "priestess"
@@ -1637,7 +1666,34 @@ async def do_talk(ctx, arg):
         exclude_names=(p.name,),
     )
 
-    response = await npc_ai.get_npc_response(npc_type, npc_name, npc_desc, message)
+    # --- shopkeeper buy-intent shortcut ---
+    if npc_type == "shopkeeper" and _BUY_INTENT_RE.search(message):
+        msg_lower = message.lower()
+        bought_iid: str | None = None
+        for iid in room.shop:
+            tmpl = ctx.world.get_item(iid)
+            if not tmpl:
+                continue
+            if any(w in msg_lower for w in tmpl.name.lower().split() if len(w) > 2):
+                bought_iid = iid
+                break
+
+        if not bought_iid:
+            reply = random.choice(_BUY_UNKNOWN)
+        elif p.gold < ctx.world.get_item(bought_iid).value:
+            tmpl = ctx.world.get_item(bought_iid)
+            reply = random.choice(_BUY_CANT_AFFORD).format(gold=tmpl.value)
+        else:
+            tmpl = ctx.world.get_item(bought_iid)
+            p.gold -= tmpl.value
+            p.inventory.append(bought_iid)
+            reply = random.choice(_BUY_CONFIRM).format(gold=tmpl.value)
+            await ctx.engine.send(p, f"You receive {c.item(tmpl.name)}. (Gold remaining: {c.gold(p.gold)})")
+
+        await ctx.engine.send(p, f'{c.player(npc_name)} says, "{c.say(reply)}"')
+        return
+
+    response = await npc_ai.get_npc_response(npc_type, npc_name, npc_desc, message, shop_inventory)
     await ctx.engine.send(p, f'{c.player(npc_name)} says, "{c.say(response)}"')
 
 
