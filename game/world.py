@@ -12,7 +12,7 @@ import json
 import os
 import re
 from dataclasses import fields as dc_fields
-from .models import Room, ItemTemplate, MobTemplate, Container, Trainer
+from .models import Room, ItemTemplate, MobTemplate, Container, Trainer, GuideNPC
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data")
 ITEMS_PATH = os.path.join(DATA_DIR, "items.json")
@@ -58,6 +58,9 @@ class World:
             trainer = None
             if rdata.get("trainer"):
                 trainer = Trainer(**rdata["trainer"])
+            guide = None
+            if rdata.get("guide"):
+                guide = GuideNPC(**rdata["guide"])
             self.rooms[rid] = Room(
                 id=rid,
                 name=rdata["name"],
@@ -70,6 +73,7 @@ class World:
                 container=container,
                 lore=rdata.get("lore", ""),
                 trainer=trainer,
+                guide=guide,
             )
 
     def get_room(self, room_id: str) -> Room | None:
@@ -157,5 +161,13 @@ class World:
                     "level": r.trainer.level,
                 }
                 if r.trainer else None
+            ),
+            "guide": (
+                {
+                    "name": r.guide.name,
+                    "description": r.guide.description,
+                    "equipment_desc": r.guide.equipment_desc,
+                }
+                if r.guide else None
             ),
         }

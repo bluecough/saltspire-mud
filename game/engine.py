@@ -11,8 +11,63 @@ from . import persistence
 from .models import Player, MobInstance, CLASS_INFO, MAX_LEVEL
 from .world import World
 
-TICK_SECONDS = 2.0
-SAVE_INTERVAL = 30.0
+TICK_SECONDS   = 2.0
+SAVE_INTERVAL  = 30.0
+WANDER_TICKS   = 10    # check wandering every N ticks (10 x 2 s = 20 s real = ~4 game min)
+WANDER_CHANCE  = 0.30  # probability a qualifying mob wanders per check
+
+# Rooms grouped into zones; mobs only wander to adjacent rooms in the same zone.
+_ZONES: dict[str, frozenset] = {
+    "town": frozenset({
+        "tavern", "market_square", "fish_market", "blacksmith", "apothecary",
+        "general_store", "tannery", "jeweler", "pawnshop", "counting_house",
+        "drowned_lantern_inn", "the_gilt_lantern", "weavers_row", "manor_row",
+        "gildwater_promenade", "town_archive", "mercenary_board", "guildhall",
+        "press_gang_corner", "temple_row", "scholars_chapel",
+    }),
+    "harbor": frozenset({
+        "harbor_docks", "harbor_pier", "harbormaster_office", "city_gate",
+        "warehouse_row", "smugglers_alley",
+    }),
+    "sewers": frozenset({
+        "sewer_entrance", "sewer_tunnel_1", "sewer_tunnel_2", "sewer_tunnel_3",
+        "sewer_lair", "flooded_cistern", "flooded_vault", "the_low_tunnel",
+    }),
+    "coast": frozenset({
+        "coast_road", "bandit_camp", "lighthouse_base", "lighthouse_top",
+        "sea_cave_mouth", "smugglers_cove", "smugglers_den", "hidden_grotto",
+        "windswept_bluffs",
+    }),
+    "foothills": frozenset({
+        "foothill_path", "boggy_shallows", "the_fenmire", "drowned_thicket",
+        "wolf_den", "hamlet_road", "salt_fields", "tallows_reach",
+        "hollow_moor", "weeping_willow", "druids_grove",
+    }),
+    "high_ward": frozenset({
+        "high_ward", "high_ward_gate", "silver_court", "keep_courtyard",
+        "keep_armory", "keep_barracks", "keep_dungeon", "warden_gate",
+        "old_graves", "mausoleum_row",
+    }),
+    "old_vael": frozenset({
+        "old_vael_archive", "old_vael_plaza", "old_vael_shrine",
+        "old_sentinel_base", "old_sentinel_top", "the_bone_warden_hall",
+        "the_sealed_crypt", "the_deep_maw", "undercity_stair",
+    }),
+    "wilderness": frozenset({
+        "hollow_yard", "hollow_yard_gate", "greyfang_pass", "terraced_gardens",
+        "crossroads_shrine",
+    }),
+    "shrines": frozenset({
+        "shrine_walk", "shrine_of_embers", "shrine_of_tides",
+        "sunken_shrine_of_the_fen",
+    }),
+    "galley": frozenset({
+        "galley_hold", "moored_galley_deck",
+    }),
+}
+_ROOM_ZONE: dict[str, str] = {
+    rid: zn for zn, rooms in _ZONES.items() for rid in rooms
+}
 
 
 class GameEngine:
@@ -23,6 +78,7 @@ class GameEngine:
         self.ground: dict[str, list] = {}         # room_id -> [item_id, ...] (not persisted)
         self._opened_containers: set[str] = set()
         self._mob_seq = 0
+        self._wander_tick = 0
         self._spawn_initial_mobs()
 
     # ---- world / mob spawning ------------------------------------------------
@@ -210,6 +266,12 @@ class GameEngine:
                 inst.target_name = None
                 await self.send_room(inst.room_id, c.system(f"{tmpl.name.capitalize()} skulks back into the area."))
 
+        # mob wandering
+        self._wander_tick += 1
+        if self._wander_tick >= WANDER_TICKS:
+            self._wander_tick = 0
+            await self._do_mob_wander()
+
         # combat & passive regen for connected players
         for player in list(self.players.values()):
             if not player.connected:
@@ -226,6 +288,36 @@ class GameEngine:
             if now - player.last_save > SAVE_INTERVAL:
                 persistence.save(player)
                 player.last_save = now
+
+    async def _do_mob_wander(self):
+        """Randomly move idle mobs to an adjacent room within the same zone."""
+        for inst in list(self.mobs.values()):
+            if not inst.alive or inst.target_name:
+                continue   # dead or engaged in combat
+            tmpl = self.world.get_mob_template(inst.template_id)
+            if tmpl and not getattr(tmpl, "wander", True):
+                continue   # template opts out of wandering
+            if random.random() > WANDER_CHANCE:
+                continue
+            zone = _ROOM_ZONE.get(inst.room_id)
+            if not zone:
+                continue   # room not in any defined zone
+            room = self.world.get_room(inst.room_id)
+            if not room:
+                continue
+            neighbors = [
+                dest for dest in room.exits.values()
+                if _ROOM_ZONE.get(dest) == zone
+                and self.world.get_room(dest) is not None
+            ]
+            if not neighbors:
+                continue
+            dest_id = random.choice(neighbors)
+            await self.send_room(inst.room_id,
+                c.system(f"{tmpl.name.capitalize()} moves away."))
+            inst.room_id = dest_id
+            await self.send_room(dest_id,
+                c.system(f"{tmpl.name.capitalize()} arrives."))
 
     async def _resolve_combat_round(self, player: Player):
         inst = self.mobs.get(player.in_combat_with)

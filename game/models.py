@@ -43,6 +43,7 @@ class MobTemplate:
     gold_max: int
     respawn_seconds: int
     loot: list = field(default_factory=list)  # [{"item": id, "chance": 0..1}]
+    wander: bool = True                        # may this mob wander within its zone?
 
 
 @dataclass
@@ -68,6 +69,14 @@ class Trainer:
 
 
 @dataclass
+class GuideNPC:
+    """An immortal, helpful guide fixture. Shown in rooms, talkable, not attackable."""
+    name: str
+    description: str
+    equipment_desc: str  # shown when player looks at the guide directly
+
+
+@dataclass
 class Room:
     id: str
     name: str
@@ -80,6 +89,7 @@ class Room:
     container: Optional[Container] = None
     lore: str = ""  # optional extended history/flavor text, read with 'lore'
     trainer: Optional[Trainer] = None  # guild trainer NPC, if any (see learn/use)
+    guide: Optional[GuideNPC] = None   # immortal guide fixture, if any (spawn rooms)
 
 
 # ---------------------------------------------------------------------------
