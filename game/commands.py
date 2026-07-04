@@ -8,6 +8,7 @@ from . import auth
 from . import colors as c
 from . import npc_ai
 from . import persistence
+from . import time as gametime
 
 DIRECTIONS = {
     "n": "north", "s": "south", "e": "east", "w": "west", "u": "up", "d": "down",
@@ -377,6 +378,15 @@ async def do_look(ctx, arg):
                 p, f"{c.player(t.name)}, {c.esc(t.title)} of the {c.esc(t.klass.capitalize())}s' Guild "
                    f"(level {t.level}).<br>{c.esc(t.description)}")
             return
+        if room.guide:
+            g = room.guide
+            g_words = g.name.lower().split()
+            if arg.lower() in g.name.lower() or any(arg.lower() == w for w in g_words):
+                equip = f"They carry: {c.esc(g.equipment_desc)}." if g.equipment_desc else ""
+                await ctx.engine.send(
+                    p, f"{c.player(g.name)}<br>{c.esc(g.description)}"
+                       + (f"<br>{equip}" if equip else ""))
+                return
         mob = ctx.engine.find_mob_in_room(p.room_id, arg)
         if mob:
             tmpl = ctx.world.get_mob_template(mob.template_id)
@@ -399,13 +409,22 @@ async def do_look(ctx, arg):
         await ctx.engine.send(p, c.error("You don't see that here."))
         return
 
-    lines = [c.room(c.esc(room.name)), c.esc(room.description)]
+    gt = gametime.now()
+    lines = [
+        c.tag(f"[{c.esc(gt.summary())}]", "c-system"),
+        c.room(c.esc(room.name)),
+        c.esc(room.description),
+    ]
     exits = ", ".join(sorted(room.exits.keys())) or "none"
     lines.append(f"Exits: {c.exit_(exits)}")
 
     if room.trainer:
         t = room.trainer
         lines.append(f"{c.player(t.name)}, {c.esc(t.title)} of the {c.esc(t.klass.capitalize())}s' Guild, is here.")
+
+    if room.guide:
+        g = room.guide
+        lines.append(f"{c.player(g.name)} is here, watching the door.")
 
     for m in ctx.engine.mobs_in_room(room.id):
         tmpl = ctx.world.get_mob_template(m.template_id)
@@ -427,6 +446,9 @@ async def do_look(ctx, arg):
         lines.append(c.help_("You may 'pray' here to be healed. The priestess is also willing to talk."))
     if room.trainer:
         lines.append(c.help_(f"(You can 'talk {room.trainer.name.split()[0].lower()}' to speak with the trainer.)"))
+    if room.guide:
+        g = room.guide
+        lines.append(c.help_(f"(You can 'talk {g.name.split()[0].lower()}' or 'talk {g.name.split()[-1].lower()}' for guidance.)"))
     if room.container and not ctx.engine.is_container_opened(room.id):
         lines.append(c.item(f"There is {room.container.name} here. (try 'open chest')"))
     if room.lore:
@@ -629,6 +651,14 @@ async def do_kill(ctx, arg):
         return
     if p.in_combat_with:
         await ctx.engine.send(p, c.error("You're already fighting!"))
+        return
+    # Fixture NPCs (trainers, guide) are immortal -- not valid attack targets.
+    kw = arg.lower()
+    if room.trainer and kw in room.trainer.name.lower():
+        await ctx.engine.send(p, c.error(f"{room.trainer.name} eyes you coldly. That would be unwise."))
+        return
+    if room.guide and (kw in room.guide.name.lower() or any(kw == w for w in room.guide.name.lower().split())):
+        await ctx.engine.send(p, c.error(f"{room.guide.name} glances at your weapon hand without concern. 'I wouldn't.'"))
         return
     mob = ctx.engine.find_mob_in_room(p.room_id, arg)
     if not mob:
@@ -1619,6 +1649,8 @@ async def do_talk(ctx, arg):
         available = []
         if room.trainer:
             available.append(room.trainer.name)
+        if room.guide:
+            available.append(room.guide.name)
         if room.shop:
             available.append("the shopkeeper")
         if "heal" in room.services:
@@ -1661,6 +1693,14 @@ async def do_talk(ctx, arg):
         npc_type = "priestess"
         npc_name = "the priestess"
         npc_desc = "a priestess of the Temple of the Dawn"
+
+    if npc_type is None and room.guide:
+        g = room.guide
+        g_words = [w.lower() for w in g.name.split()]
+        if npc_keyword in g.name.lower() or npc_keyword in g_words:
+            npc_type = "guide"
+            npc_name = g.name
+            npc_desc = g.description[:120]
 
     if npc_type is None:
         await ctx.engine.send(p, c.error("There is no one by that name to talk to here."))
