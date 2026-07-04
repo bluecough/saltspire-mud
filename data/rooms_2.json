@@ -3,788 +3,373 @@
     "name": "Old Sentinel, Base",
     "description": "A crumbling watchtower rises from the moor, its lower door long since kicked in.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "tower_brigand",
-        "max": 1
-      }
-    ],
-    "exits": {
-      "south": "hollow_moor",
-      "up": "old_sentinel_top"
-    },
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "mob_spawns": [{"mob": "tower_brigand", "max": 1}],
+    "exits": {"south": "hollow_moor", "up": "old_sentinel_top"},
+    "shop": [], "services": [], "lore": "", "container": null
   },
   "old_sentinel_top": {
     "name": "Old Sentinel, Top",
     "description": "The tower's upper room is open to the sky where the roof used to be. An old footlocker sits wedged in the corner, somehow undisturbed.",
     "safe": true,
-    "container": {
-      "name": "a weathered footlocker",
-      "requires_key": null,
-      "loot": [
-        "sentinels_badge",
-        "healing_potion"
-      ]
-    },
+    "container": {"name": "a weathered footlocker", "requires_key": null, "loot": ["sentinels_badge", "healing_potion"]},
     "lore": "Old Sentinel was the northernmost of three watchtowers built to give Tallow's Reach warning of another Red Tide-style raid. The other two collapsed into the sea decades ago. No one has formally decommissioned this one; no one has manned it either.",
-    "exits": {
-      "down": "old_sentinel_base"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": []
+    "exits": {"down": "old_sentinel_base"},
+    "mob_spawns": [], "shop": [], "services": []
   },
   "old_vael_archive": {
     "name": "The Drowned Archive",
     "description": "Waterlogged shelving lines a half-collapsed reading hall, the books long since dissolved to pulp. A construct of coral and bronze still stands guard over what's left.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "archive_construct",
-        "max": 1
-      }
-    ],
+    "mob_spawns": [{"mob": "archive_construct", "max": 1}],
     "lore": "Old Vael was a seafaring realm with its own kings, its own gods, and -- by the look of this hall -- its own scholars, before a single storm and a wave that never receded took the whole island in one night. The First Hundred who survived rarely spoke of what they saw that night; this archive may be the closest thing left to their side of the story.",
-    "exits": {
-      "south": "old_vael_plaza",
-      "down": "flooded_vault"
-    },
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"south": "old_vael_plaza", "down": "flooded_vault"},
+    "shop": [], "services": [], "container": null
   },
   "old_vael_plaza": {
     "name": "Old Vael Plaza",
     "description": "A sunken square opens around you, columns and rooflines barely recognizable under centuries of silt and brine. This was a town once, whole and lit, before the sea came back for it.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "vael_wretch",
-        "max": 2
-      },
-      {
-        "mob": "drowned_cultist",
-        "max": 1
-      }
-    ],
-    "exits": {
-      "up": "undercity_stair",
-      "north": "old_vael_archive",
-      "east": "old_vael_shrine",
-      "south": "the_deep_maw"
-    },
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "mob_spawns": [{"mob": "vael_wretch", "max": 2}, {"mob": "drowned_cultist", "max": 1}],
+    "exits": {"up": "undercity_stair", "north": "old_vael_archive", "east": "old_vael_shrine", "south": "the_deep_maw"},
+    "shop": [], "services": [], "lore": "", "container": null
   },
   "old_vael_shrine": {
     "name": "Shrine of the Drowned Choir",
     "description": "A circular shrine, its altar carved with many-armed shapes rising from waves. Candles that shouldn't still be burning down here flicker in wall niches.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "cult_zealot",
-        "max": 1
-      }
-    ],
+    "mob_spawns": [{"mob": "cult_zealot", "max": 1}],
     "lore": "The Drowned Choir cultists believe Old Vael's patron never died with the island -- only slept -- and that enough devotion (or enough sacrifice) will wake it, and the island, both. The Concord has hunted this cult out of the city proper twice. They keep coming back to the ruins instead.",
-    "exits": {
-      "west": "old_vael_plaza"
-    },
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"west": "old_vael_plaza"},
+    "shop": [], "services": [], "container": null
   },
   "pawnshop": {
     "name": "The Anchor & Coin Pawnshop",
     "description": "A cramped shop crowded with secondhand goods of dubious origin. The proprietor doesn't ask questions, and would rather you didn't either.",
     "safe": true,
-    "shop": [
-      "fishhook_knife",
-      "spyglass",
-      "tin_amulet"
-    ],
-    "exits": {
-      "west": "fish_market"
-    },
-    "mob_spawns": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "shop": ["fishhook_knife", "spyglass", "tin_amulet"],
+    "exits": {"west": "fish_market"},
+    "mob_spawns": [], "services": [], "lore": "", "container": null
   },
   "press_gang_corner": {
     "name": "Press-Gang Corner",
     "description": "A dim alley behind the harbormaster's office, the kind of place where a careless drunk wakes up aboard a ship he never signed onto.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "press_gang_thug",
-        "max": 1
-      }
-    ],
-    "exits": {
-      "west": "harbormaster_office"
-    },
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "mob_spawns": [{"mob": "press_gang_thug", "max": 1}],
+    "exits": {"west": "harbormaster_office"},
+    "shop": [], "services": [], "lore": "", "container": null
   },
   "rogues_guild": {
     "name": "The Rogues' Guild",
     "description": "A low, lamplit den beneath the concourse, reached by a trapdoor no map of Saltspire bothers to show. It isn't Undertow territory -- the two organizations simply agree not to ask too many questions about each other's business.",
     "safe": true,
-    "trainer": {
-      "name": "Sable Quick",
-      "klass": "rogue",
-      "title": "Guildmaster",
-      "description": "Sable never quite seems to be looking at you and never quite seems to be anywhere else either. She took over the guild by out-waiting the last three guildmasters, which she considers a perfectly respectable method.",
-      "level": 100
-    },
+    "trainer": {"name": "Sable Quick", "klass": "rogue", "title": "Guildmaster", "description": "Sable never quite seems to be looking at you and never quite seems to be anywhere else either. She took over the guild by out-waiting the last three guildmasters, which she considers a perfectly respectable method.", "level": 100},
     "lore": "The Rogues' Guild predates the Undertow by at least a generation, and its charter -- such as it is -- specifically forbids smuggling, to keep the two outfits from ever formally merging. Whether that line has ever actually held is a question Sable answers with a smile and nothing else.",
-    "exits": {
-      "up": "guild_concourse"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"up": "guild_concourse"},
+    "mob_spawns": [], "shop": [], "services": [], "container": null
   },
   "salt_fields": {
     "name": "The Salt Fields",
     "description": "Open, salt-crusted ground south of the crossroads, oddly barren even by coastal standards. Old wreckage -- timber, rusted blades, the curve of a hull -- still surfaces after hard rain.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "fallen_marauder",
-        "max": 2
-      },
-      {
-        "mob": "red_tide_captain",
-        "max": 1
-      }
-    ],
+    "mob_spawns": [{"mob": "fallen_marauder", "max": 2}, {"mob": "red_tide_captain", "max": 1}],
     "lore": "Two hundred years ago the Red Tide fleet beached here intending to sack Saltspire while it was still a fraction of its current size. The town's founders -- still calling themselves the First Hundred's children -- met them on this field and won decisively enough that no pirate fleet has tried Saltspire since. Nothing grows here anymore. Locals have theories; none of them agree.",
-    "exits": {
-      "north": "crossroads_shrine"
-    },
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"north": "crossroads_shrine"},
+    "shop": [], "services": [], "container": null
   },
   "scholars_chapel": {
     "name": "The Scholar's Chapel",
     "description": "A quiet, book-lined chapel dedicated to careful thought rather than miracles. A single robed keeper reads by a shuttered lamp.",
     "safe": true,
     "lore": "The Keeper of Pages asks nothing of worshippers except that they read something true before bed. The chapel's modest shelves are the only surviving copies of several First Hundred accounts -- the town archive across the city has long wanted to buy them and been politely, permanently refused.",
-    "exits": {
-      "east": "shrine_walk"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"east": "shrine_walk"},
+    "mob_spawns": [], "shop": [], "services": [], "container": null
   },
   "sea_cave_mouth": {
     "name": "Sea Cave Mouth",
     "description": "A wide cave opens at the foot of the bluffs, tide pools glittering near the entrance before the dark swallows the rest.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "cave_crab",
-        "max": 2
-      }
-    ],
-    "exits": {
-      "up": "windswept_bluffs",
-      "west": "smugglers_cove"
-    },
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "mob_spawns": [{"mob": "cave_crab", "max": 2}],
+    "exits": {"up": "windswept_bluffs", "west": "smugglers_cove"},
+    "shop": [], "services": [], "lore": "", "container": null
   },
   "sewer_entrance": {
     "name": "Sewer Grate",
     "description": "A rusted grate hangs open above a slick stone shaft leading down into darkness. The stench rising from below is unmistakable.",
-    "exits": {
-      "up": "harbor_docks",
-      "north": "sewer_tunnel_1"
-    },
-    "safe": true,
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
+    "exits": {"up": "harbor_docks", "north": "sewer_tunnel_1"},
+    "safe": true, "mob_spawns": [], "shop": [], "services": [],
     "lore": "Sewer crews who go too far down occasionally come back with stories of older brickwork, stranger stonework, and stairs that lead somewhere the city engineers never authorized. Most crews stop digging well before they'd find out for themselves.",
     "container": null
   },
   "sewer_lair": {
     "name": "Goblin Lair",
     "description": "Trash, bones, and stolen goods are piled in heaps around a crude camp. A heavy, dented chest sits against the far wall, secured with an old iron lock.",
-    "exits": {
-      "south": "sewer_tunnel_2",
-      "down": "flooded_cistern"
-    },
+    "exits": {"south": "sewer_tunnel_2", "down": "flooded_cistern"},
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "goblin_brute",
-        "max": 1
-      }
-    ],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": {
-      "name": "a dented chest",
-      "requires_key": "iron_key",
-      "loot": [
-        "tarnished_crown",
-        "healing_potion"
-      ],
-      "opened": false
-    }
+    "mob_spawns": [{"mob": "goblin_brute", "max": 1}],
+    "shop": [], "services": [], "lore": "",
+    "container": {"name": "a dented chest", "requires_key": "iron_key", "loot": ["tarnished_crown", "healing_potion"], "opened": false}
   },
   "sewer_tunnel_1": {
     "name": "Sewer Tunnel",
     "description": "Foul water trickles along a cracked stone channel. Something skitters in the dark just beyond the edge of sight.",
-    "exits": {
-      "south": "sewer_entrance",
-      "east": "sewer_tunnel_2"
-    },
+    "exits": {"south": "sewer_entrance", "east": "sewer_tunnel_2"},
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "dock_rat",
-        "max": 2
-      }
-    ],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "mob_spawns": [{"mob": "dock_rat", "max": 2}],
+    "shop": [], "services": [], "lore": "", "container": null
   },
   "sewer_tunnel_2": {
     "name": "Deeper Sewer Tunnel",
     "description": "The tunnel narrows here, walls slick with algae. Crude markings, more graffiti than language, are scratched into the stone.",
-    "exits": {
-      "west": "sewer_tunnel_1",
-      "north": "sewer_lair",
-      "east": "sewer_tunnel_3"
-    },
+    "exits": {"west": "sewer_tunnel_1", "north": "sewer_lair", "east": "sewer_tunnel_3"},
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "sewer_goblin",
-        "max": 2
-      }
-    ],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "mob_spawns": [{"mob": "sewer_goblin", "max": 2}],
+    "shop": [], "services": [], "lore": "", "container": null
   },
   "sewer_tunnel_3": {
     "name": "Sewer Tunnel, Third Branch",
     "description": "The channel here runs faster and colder than the tunnels above, as if fed from somewhere deeper than the town's own waste.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "cave_rat",
-        "max": 2
-      }
-    ],
-    "exits": {
-      "west": "sewer_tunnel_2",
-      "south": "flooded_cistern",
-      "east": "the_low_tunnel"
-    },
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "mob_spawns": [{"mob": "cave_rat", "max": 2}],
+    "exits": {"west": "sewer_tunnel_2", "south": "flooded_cistern", "east": "the_low_tunnel"},
+    "shop": [], "services": [], "lore": "", "container": null
   },
   "shrine_of_embers": {
     "name": "Shrine of the Emberfather",
     "description": "A small forge-shrine, its single hearth never quite allowed to go cold, tended in shifts by off-duty smiths.",
     "safe": true,
     "lore": "Brackwater the blacksmith lights this hearth himself most mornings before opening the forge. The Emberfather has no temple of his own, only this hearth and whatever smiths keep it burning -- which suits the guild just fine.",
-    "exits": {
-      "north": "shrine_walk"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"north": "shrine_walk"},
+    "mob_spawns": [], "shop": [], "services": [], "container": null
   },
   "shrine_of_tides": {
     "name": "Shrine of the Tideful Mother",
     "description": "A weather-worn shrine open to the sea air, hung with nets, shells, and small carved boats left as offerings.",
     "safe": true,
     "lore": "Sailors leave a carved boat here before any long voyage, and another if they make it back. The Tideful Mother is older than the Dawnmother's temple by most accounts -- older, some say, than Saltspire itself, brought ashore in the memory of the First Hundred rather than built fresh.",
-    "exits": {
-      "south": "shrine_walk"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"south": "shrine_walk"},
+    "mob_spawns": [], "shop": [], "services": [], "container": null
   },
   "shrine_walk": {
     "name": "Shrine Walk",
     "description": "A short colonnade off Temple Row, lined with smaller shrines tended by whichever priest has time that day.",
     "safe": true,
-    "exits": {
-      "east": "temple_row",
-      "north": "shrine_of_tides",
-      "south": "shrine_of_embers",
-      "west": "scholars_chapel"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "exits": {"east": "temple_row", "north": "shrine_of_tides", "south": "shrine_of_embers", "west": "scholars_chapel"},
+    "mob_spawns": [], "shop": [], "services": [], "lore": "", "container": null
   },
   "silver_court": {
     "name": "Silver Court",
     "description": "A plaza of pale flagstones centers on a weathered statue: a man and woman standing back to back, facing the sea on one side and the cliffs on the other.",
     "safe": true,
     "lore": "The statue depicts two of the First Hundred -- the refugees who washed ashore beneath the black spire some three hundred and forty years ago, fleeing the sinking of their homeland, Old Vael. Their names are worn off the plaque, but every Saltspire schoolchild can still recite the lines once carved beneath it: we did not choose the tide, but we chose what we built after it.",
-    "exits": {
-      "south": "gildwater_promenade",
-      "east": "counting_house",
-      "north": "warden_gate"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"south": "gildwater_promenade", "east": "counting_house", "north": "warden_gate"},
+    "mob_spawns": [], "shop": [], "services": [], "container": null
   },
   "smugglers_alley": {
     "name": "Smugglers' Alley",
     "description": "A cramped gap between warehouses, just wide enough for a loaded handcart and a guilty conscience.",
     "safe": true,
-    "exits": {
-      "west": "warehouse_row",
-      "down": "smugglers_den"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "exits": {"west": "warehouse_row", "down": "smugglers_den"},
+    "mob_spawns": [], "shop": [], "services": [], "lore": "", "container": null
   },
   "smugglers_cove": {
     "name": "Smugglers' Cove",
     "description": "A hidden cove deep in the sea caves, lantern-lit and stacked with crates -- the Undertow's other door into the city, far from any harbormaster's eyes.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "undertow_smuggler",
-        "max": 2
-      }
-    ],
+    "mob_spawns": [{"mob": "undertow_smuggler", "max": 2}],
     "lore": "This cove connects, by a long and unpleasant tunnel, all the way back to the warehouse district and the sewers beneath Saltspire proper. The Undertow has been moving goods through this exact route since before the current syndicate leadership was even born.",
-    "exits": {
-      "east": "sea_cave_mouth",
-      "north": "the_low_tunnel"
-    },
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"east": "sea_cave_mouth", "north": "the_low_tunnel"},
+    "shop": [], "services": [], "container": null
   },
   "smugglers_den": {
     "name": "The Undertow's Den",
     "description": "A hidden cellar beneath the warehouses, lit by shuttered lanterns. Crates of unlabeled cargo line every wall, and the wave-and-coin sigil is scratched into the support beams.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "undertow_cutthroat",
-        "max": 1
-      },
-      {
-        "mob": "undertow_enforcer",
-        "max": 1
-      }
-    ],
+    "mob_spawns": [{"mob": "undertow_cutthroat", "max": 1}, {"mob": "undertow_enforcer", "max": 1}],
     "lore": "The Undertow runs every illicit good that crosses Saltspire's docks -- smuggled spice, unregistered cargo, the occasional debt collected with a knife rather than a ledger. They've operated since before the Concord existed and answer to no Warden, only to whoever currently holds the syndicate's signet.",
-    "exits": {
-      "up": "smugglers_alley",
-      "south": "the_low_tunnel"
-    },
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"up": "smugglers_alley", "south": "the_low_tunnel"},
+    "shop": [], "services": [], "container": null
   },
   "sunken_shrine_of_the_fen": {
     "name": "Sunken Shrine of the Fen",
     "description": "A half-collapsed stone shrine sinks slowly into the mire, moss-thick and reeking of stagnant water. Something old and unhappy with visitors lives here.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "fen_mother",
-        "max": 1
-      }
-    ],
+    "mob_spawns": [{"mob": "fen_mother", "max": 1}],
     "lore": "The fen mother predates every record in the town archive and most of the legends in Tallow's Reach besides. She's never once come looking for Saltspire. Successive Wardens have all, eventually, agreed it's best to leave that arrangement exactly as it is.",
-    "exits": {
-      "north": "the_fenmire"
-    },
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"north": "the_fenmire"},
+    "shop": [], "services": [], "container": null
   },
   "tallows_reach": {
     "name": "Tallow's Reach",
     "description": "A small fishing hamlet of weathered cottages and drying racks, independent of Saltspire in name only. A trader's cart does brisk business near the well.",
     "safe": true,
-    "shop": [
-      "dried_rations",
-      "fishing_net"
-    ],
+    "shop": ["dried_rations", "fishing_net"],
     "lore": "Tallow's Reach predates Saltspire's outer walls -- a handful of First Hundred families settled here first, before the harbor town grew big enough to need its own High Ward. The Reach still elects its own headman and largely ignores the Concord's tariffs, and the Concord has decided, wisely, not to push the matter.",
-    "exits": {
-      "south": "hamlet_road",
-      "east": "hollow_moor"
-    },
-    "mob_spawns": [],
-    "services": [],
-    "container": null
+    "exits": {"south": "hamlet_road", "east": "hollow_moor"},
+    "mob_spawns": [], "services": [], "container": null
   },
   "tannery": {
     "name": "The Tannery",
     "description": "The smell hits before the doorway does -- hides stretched on racks, vats of curing solution, and a tanner who's long since stopped noticing the stench.",
     "safe": true,
-    "exits": {
-      "north": "guildhall",
-      "east": "apothecary"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "exits": {"north": "guildhall", "east": "apothecary"},
+    "mob_spawns": [], "shop": [], "services": [], "lore": "", "container": null
   },
   "tavern": {
     "name": "The Rusty Anchor",
     "description": "Warm lantern-light spills over scarred oak tables. A fire crackles in a stone hearth, and the smell of stew and spilled ale hangs in the air. A barkeep polishes mugs behind a long counter, half-listening to a sailor's tall tale. This is where most adventurers in town start their day.",
-    "exits": {
-      "north": "market_square",
-      "east": "harbor_docks",
-      "south": "temple_row",
-      "west": "guildhall",
-      "down": "vault"
-    },
-    "safe": true,
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
+    "exits": {"north": "market_square", "east": "harbor_docks", "south": "temple_row", "west": "guildhall", "down": "vault"},
+    "safe": true, "mob_spawns": [], "shop": [], "services": [],
     "lore": "The Rusty Anchor has stood on this corner since the town was a few dozen huts clustered at the base of the black spire. Records in the town archive credit its first hearth to one of the First Hundred outright, though three centuries of rebuilding mean nothing of the original timber survives.",
-    "container": null
+    "container": null,
+    "guide": {
+      "name": "Old Rook",
+      "description": "A grey-haired veteran nursing a mug at the end of the bar, watchful eyes taking in the room with the unhurried patience of someone who has nowhere better to be. Battered chainmail hangs loose on his frame, and a longsword and round shield lean within easy reach against the stool. He has the air of someone who has given the same speech a hundred times and genuinely does not mind giving it again.",
+      "equipment_desc": "a longsword, battered chainmail, and a round shield"
+    }
   },
   "temple_of_dawn": {
     "name": "Temple of the Dawn",
     "description": "Sunlight filters through stained glass, washing the stone floor in color. A serene priestess tends a low altar, offering quiet blessings to anyone who asks.",
-    "exits": {
-      "west": "temple_row"
-    },
-    "safe": true,
-    "mob_spawns": [],
-    "shop": [],
-    "services": [
-      "heal"
-    ],
+    "exits": {"west": "temple_row"},
+    "safe": true, "mob_spawns": [], "shop": [], "services": ["heal"],
     "lore": "The Dawnmother is Saltspire's newest faith, embraced widely only in the last century, but the older household gods -- the Tideful Mother, the Emberfather, the Keeper of Pages -- still keep their own quiet shrines along Temple Row for anyone who prefers older company.",
     "container": null
   },
   "temple_row": {
     "name": "Temple Row",
     "description": "Quiet cobbled streets lined with modest shrines. Soft chanting drifts from an open doorway to the east.",
-    "exits": {
-      "north": "tavern",
-      "east": "temple_of_dawn",
-      "west": "shrine_walk",
-      "south": "hollow_yard_gate"
-    },
-    "safe": true,
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "exits": {"north": "tavern", "east": "temple_of_dawn", "west": "shrine_walk", "south": "hollow_yard_gate"},
+    "safe": true, "mob_spawns": [], "shop": [], "services": [], "lore": "", "container": null
   },
   "terraced_gardens": {
     "name": "Terraced Gardens",
     "description": "Stepped flowerbeds climb toward the cliff face, fed by a system of stone channels older than the manors around them.",
     "safe": true,
-    "exits": {
-      "south": "manor_row",
-      "east": "hidden_grotto"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "exits": {"south": "manor_row", "east": "hidden_grotto"},
+    "mob_spawns": [], "shop": [], "services": [], "lore": "", "container": null
   },
   "the_bone_warden_hall": {
     "name": "Hall of the Bone Warden",
     "description": "A burial hall at the crypt's lowest point, centered on a sarcophagus too large for any person. It is, regrettably, not empty.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "the_bone_warden",
-        "max": 1
-      }
-    ],
+    "mob_spawns": [{"mob": "the_bone_warden", "max": 1}],
     "lore": "No record in the town archive explains who the bone warden was meant to guard, or from what. Whoever sealed this crypt clearly expected someone to come digging eventually -- and built accordingly.",
-    "exits": {
-      "up": "the_sealed_crypt"
-    },
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"up": "the_sealed_crypt"},
+    "shop": [], "services": [], "container": null
   },
   "the_deep_maw": {
     "name": "The Deep Maw",
     "description": "The plaza floor gives way entirely here, into a black, water-filled pit ringed by broken stone teeth. Something vast moves at the edge of your lantern light.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "the_tidewarden",
-        "max": 1
-      }
-    ],
+    "mob_spawns": [{"mob": "the_tidewarden", "max": 1}],
     "lore": "Whatever the tidewarden once guarded, it has had three centuries alone down here to forget everything except guarding it. Killing it doesn't feel like a victory so much as an apology, several hundred years overdue, for whatever the First Hundred did to escape Old Vael in the first place.",
-    "exits": {
-      "north": "old_vael_plaza"
-    },
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"north": "old_vael_plaza"},
+    "shop": [], "services": [], "container": null
   },
   "the_fenmire": {
     "name": "The Fenmire",
     "description": "A sprawling, fog-choked swamp, all standing water and half-sunken deadwood. Distant, unhurried splashes suggest you're being watched from several directions at once.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "mire_kin",
-        "max": 2
-      }
-    ],
-    "exits": {
-      "north": "boggy_shallows",
-      "east": "drowned_thicket",
-      "south": "sunken_shrine_of_the_fen"
-    },
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "mob_spawns": [{"mob": "mire_kin", "max": 2}],
+    "exits": {"north": "boggy_shallows", "east": "drowned_thicket", "south": "sunken_shrine_of_the_fen"},
+    "shop": [], "services": [], "lore": "", "container": null
   },
   "the_gilt_lantern": {
     "name": "The Gilt Lantern",
     "description": "A masquerade hall hung with gold-leafed lanterns. Even empty at this hour, it smells of spilled wine and old secrets.",
     "safe": true,
     "lore": "The Gilt Lantern hosts a masked ball every solstice, ostensibly for the merchant houses to mingle. In practice, half the deals struck under those gold lanterns are Undertow business laundered through noble guests who'd never admit to knowing the syndicate's name.",
-    "exits": {
-      "east": "gildwater_promenade"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"east": "gildwater_promenade"},
+    "mob_spawns": [], "shop": [], "services": [], "container": null
   },
   "the_low_tunnel": {
     "name": "The Low Tunnel",
     "description": "A cramped, low passage that smells of brine and tar in equal measure -- somewhere between sewer, sea cave, and smuggler's shortcut.",
     "safe": true,
-    "exits": {
-      "north": "smugglers_den",
-      "west": "sewer_tunnel_3",
-      "south": "smugglers_cove"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "exits": {"north": "smugglers_den", "west": "sewer_tunnel_3", "south": "smugglers_cove"},
+    "mob_spawns": [], "shop": [], "services": [], "lore": "", "container": null
   },
   "the_sealed_crypt": {
     "name": "The Sealed Crypt",
     "description": "A descending stair behind the broken mausoleum door, air thick with dust that hasn't moved in a very long time.",
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "crypt_wight",
-        "max": 1
-      }
-    ],
-    "exits": {
-      "up": "mausoleum_row",
-      "down": "the_bone_warden_hall"
-    },
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "mob_spawns": [{"mob": "crypt_wight", "max": 1}],
+    "exits": {"up": "mausoleum_row", "down": "the_bone_warden_hall"},
+    "shop": [], "services": [], "lore": "", "container": null
   },
   "town_archive": {
     "name": "The Town Archive",
     "description": "Tall shelves of bound ledgers and survivor accounts fill a surprisingly grand reading room for such a young city. An archivist watches you over half-moon spectacles.",
     "safe": true,
     "lore": "The archive holds Saltspire's official memory: the First Hundred's landing, the founding of the Harbor Concord, the breaking of the Red Tide fleet at what's now called the salt fields, and the long, still-unfinished argument over how much of Old Vael's fall their ancestors actually caused. The archivist will tell you, if asked directly, that the missing pages were missing long before she took the job.",
-    "exits": {
-      "west": "mercenary_board"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"west": "mercenary_board"},
+    "mob_spawns": [], "shop": [], "services": [], "container": null
   },
   "undercity_stair": {
     "name": "The Undercity Stair",
     "description": "A wide stone stairway, its steps worn into smooth curves, descends past the cistern into deeper dark. The brickwork here gives way entirely to older, stranger stonework.",
     "safe": true,
     "lore": "These stairs were carved before the Concord, before the Counting House, before even the Rusty Anchor -- some say by the First Hundred themselves, in the years right after they washed ashore, back when the spire's roots were the only shelter anyone had.",
-    "exits": {
-      "up": "flooded_cistern",
-      "down": "old_vael_plaza"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"up": "flooded_cistern", "down": "old_vael_plaza"},
+    "mob_spawns": [], "shop": [], "services": [], "container": null
   },
   "vault": {
     "name": "A Hidden Vault",
     "description": "A small vault, still smelling of fresh-turned earth.",
-    "exits": {
-      "up": "tavern"
-    },
-    "safe": true,
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "exits": {"up": "tavern"},
+    "safe": true, "mob_spawns": [], "shop": [], "services": [], "lore": "", "container": null
   },
   "warden_gate": {
     "name": "Warden Gate",
     "description": "A fortified gatehouse of black spire-stone marks the boundary of Warden Keep proper. The guards here don't bother with practiced suspicion -- they're openly suspicious.",
     "safe": true,
-    "exits": {
-      "south": "silver_court",
-      "north": "keep_courtyard"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "exits": {"south": "silver_court", "north": "keep_courtyard"},
+    "mob_spawns": [], "shop": [], "services": [], "lore": "", "container": null
   },
   "warehouse_row": {
     "name": "Warehouse Row",
     "description": "Squat timber warehouses crowd the pier's edge, padlocked and unmarked. More goods move through here at night than the harbormaster ever sees by day.",
     "safe": true,
-    "exits": {
-      "south": "harbor_pier",
-      "east": "smugglers_alley"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "exits": {"south": "harbor_pier", "east": "smugglers_alley"},
+    "mob_spawns": [], "shop": [], "services": [], "lore": "", "container": null
   },
   "warriors_guild": {
     "name": "The Warriors' Guild",
     "description": "A high-ceilinged training hall, weapon racks lining every wall and a sand-floored sparring ring at its center. The air smells of oiled steel and old sweat.",
     "safe": true,
-    "trainer": {
-      "name": "Garrick Stonefist",
-      "klass": "warrior",
-      "title": "Guildmaster",
-      "description": "A broad-shouldered veteran with a nose broken in at least three different decades, Garrick watches every sparring match like he's grading it. He's outlived three duels he wasn't supposed to win.",
-      "level": 100
-    },
-    "exits": {
-      "south": "guild_concourse"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "trainer": {"name": "Garrick Stonefist", "klass": "warrior", "title": "Guildmaster", "description": "A broad-shouldered veteran with a nose broken in at least three different decades, Garrick watches every sparring match like he's grading it. He's outlived three duels he wasn't supposed to win.", "level": 100},
+    "exits": {"south": "guild_concourse"},
+    "mob_spawns": [], "shop": [], "services": [], "lore": "", "container": null
   },
   "weavers_row": {
     "name": "Weavers' Row",
     "description": "Looms clatter behind open shopfronts, bolts of dyed cloth hung to air in the salt breeze.",
     "safe": true,
-    "shop": [
-      "padded_tunic",
-      "woolen_cloak"
-    ],
-    "exits": {
-      "east": "guildhall",
-      "south": "jeweler"
-    },
-    "mob_spawns": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "shop": ["padded_tunic", "woolen_cloak"],
+    "exits": {"east": "guildhall", "south": "jeweler"},
+    "mob_spawns": [], "services": [], "lore": "", "container": null
   },
   "weeping_willow": {
     "name": "The Weeping Willow",
     "description": "A single ancient willow stands over a small, fenced plot, its branches trailing low enough to brush the ground.",
     "safe": true,
     "lore": "No one buried under the willow has a name on record. Locals call it the First Hundred's plot, on the theory that the last of the original refugees are here -- unmarked on purpose, since none of them wanted a monument grander than the people who didn't survive the crossing.",
-    "exits": {
-      "east": "hollow_yard"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "container": null
+    "exits": {"east": "hollow_yard"},
+    "mob_spawns": [], "shop": [], "services": [], "container": null
   },
   "windswept_bluffs": {
     "name": "Windswept Bluffs",
     "description": "The road climbs along bare cliffs here, wind strong enough to lean into. The sea below churns white against black rock.",
     "safe": true,
-    "exits": {
-      "south": "crossroads_shrine",
-      "north": "hamlet_road",
-      "down": "sea_cave_mouth"
-    },
-    "mob_spawns": [],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "exits": {"south": "crossroads_shrine", "north": "hamlet_road", "down": "sea_cave_mouth"},
+    "mob_spawns": [], "shop": [], "services": [], "lore": "", "container": null
   },
   "wolf_den": {
     "name": "The Wolf Den",
     "description": "A shallow cave mouth opens in the hillside, littered with bones and tufts of grey fur. Low growls echo from the darkness within.",
-    "exits": {
-      "south": "coast_road"
-    },
+    "exits": {"south": "coast_road"},
     "safe": false,
-    "mob_spawns": [
-      {
-        "mob": "grey_wolf",
-        "max": 2
-      }
-    ],
-    "shop": [],
-    "services": [],
-    "lore": "",
-    "container": null
+    "mob_spawns": [{"mob": "grey_wolf", "max": 2}],
+    "shop": [], "services": [], "lore": "", "container": null
   }
 }
