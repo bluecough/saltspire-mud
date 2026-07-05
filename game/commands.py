@@ -412,6 +412,7 @@ async def do_look(ctx, arg):
     gt = gametime.now()
     lines = [
         c.tag(f"[{c.esc(gt.summary())}]", "c-system"),
+        c.tag(c.esc(ctx.engine.weather.description), "c-system"),
         c.room(c.esc(room.name)),
         c.esc(room.description),
     ]
