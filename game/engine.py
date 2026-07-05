@@ -26,6 +26,8 @@ _ZONES: dict[str, frozenset] = {
         "drowned_lantern_inn", "the_gilt_lantern", "weavers_row", "manor_row",
         "gildwater_promenade", "town_archive", "mercenary_board", "guildhall",
         "press_gang_corner", "temple_row", "scholars_chapel",
+        "bakers_row", "sweetbread_nook", "market_south_lane",
+        "curiosity_cabinet", "trinket_alley",
     }),
     "harbor": frozenset({
         "harbor_docks", "harbor_pier", "harbormaster_office", "city_gate",
