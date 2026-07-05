@@ -357,14 +357,29 @@ def _player_appearance(other) -> str:
 
 
 def _player_worn_desc(other, world) -> str:
-    worn = []
-    for slot, iid in other.equipment.items():
-        tmpl = world.get_item(iid)
-        if tmpl:
-            worn.append(tmpl.name)
-    if worn:
-        return "They are wearing: " + ", ".join(worn) + "."
-    return "They wear no visible equipment."
+    slot_labels = {"armor": "Wearing", "shield": "Shield", "weapon": "Wielding"}
+    lines = []
+    for slot in ("armor", "shield", "weapon"):
+        iid = other.equipment.get(slot)
+        if iid:
+            tmpl = world.get_item(iid)
+            if tmpl:
+                lines.append(f"{slot_labels[slot]}: {tmpl.name}")
+    return "<br>".join(lines) if lines else "They carry no visible equipment."
+
+
+def _player_combat_vibe(viewer_level: int, target_level: int) -> str:
+    diff = target_level - viewer_level
+    if diff <= -6:
+        return "They look outmatched — you could probably handle this easily."
+    elif diff <= -3:
+        return "They look like manageable opposition."
+    elif diff <= 1:
+        return "They look like they could hold their own in a fair fight."
+    elif diff <= 4:
+        return "There's a seasoned edge to them. Engaging would be risky."
+    else:
+        return "They carry themselves like someone who has survived things you haven't. Be very careful."
 
 
 async def do_look(ctx, arg):
@@ -398,8 +413,12 @@ async def do_look(ctx, arg):
         if other:
             appearance = _player_appearance(other)
             worn = _player_worn_desc(other, ctx.world)
+            vibe = _player_combat_vibe(p.level, other.level)
             await ctx.engine.send(
-                p, f"{c.player(other.name)} is {appearance}.<br>{c.esc(worn)}")
+                p,
+                f"{c.player(other.name)} is {appearance}."
+                f"<br>{worn}"
+                f"<br>{c.system(vibe)}")
             return
         iid = _match_item_in_list(ctx, p.inventory, arg) or _match_item_in_list(ctx, ctx.engine.ground.get(p.room_id, []), arg)
         if iid:
