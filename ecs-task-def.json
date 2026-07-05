@@ -1,0 +1,4 @@
+"environment": [
+  { "name": "OLLAMA_URL", "value": "http://<your-ollama-host>:11434" },
+  { "name": "OLLAMA_MODEL", "value": "llama3.2:3b" }
+]
