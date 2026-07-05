@@ -25,7 +25,12 @@
     "gold_min": 2,
     "gold_max": 8,
     "respawn_seconds": 35,
-    "loot": [{"item": "goblin_ear", "chance": 0.4}]
+    "loot": [
+      {
+        "item": "goblin_ear",
+        "chance": 0.4
+      }
+    ]
   },
   "goblin_brute": {
     "name": "a hulking goblin brute",
@@ -39,7 +44,12 @@
     "gold_min": 15,
     "gold_max": 30,
     "respawn_seconds": 90,
-    "loot": [{"item": "iron_key", "chance": 1.0}]
+    "loot": [
+      {
+        "item": "iron_key",
+        "chance": 1.0
+      }
+    ]
   },
   "grey_wolf": {
     "name": "a grey wolf",
@@ -81,7 +91,24 @@
     "gold_min": 30,
     "gold_max": 60,
     "respawn_seconds": 120,
-    "loot": [{"item": "chainmail", "chance": 0.25}, {"item": "tarnished_crown", "chance": 0.1}]
+    "loot": [
+      {
+        "item": "chainmail",
+        "chance": 0.25
+      },
+      {
+        "item": "tarnished_crown",
+        "chance": 0.1
+      },
+      {
+        "item": "iron_shield",
+        "chance": 0.3
+      },
+      {
+        "item": "studded_leather",
+        "chance": 0.25
+      }
+    ]
   },
   "garden_serpent": {
     "name": "a garden serpent",
@@ -109,7 +136,20 @@
     "gold_min": 10,
     "gold_max": 20,
     "respawn_seconds": 70,
-    "loot": [{"item": "warden_seal", "chance": 0.5}]
+    "loot": [
+      {
+        "item": "warden_seal",
+        "chance": 0.5
+      },
+      {
+        "item": "heater_shield",
+        "chance": 0.3
+      },
+      {
+        "item": "scale_mail",
+        "chance": 0.25
+      }
+    ]
   },
   "bilge_rat": {
     "name": "a bilge rat",
@@ -151,7 +191,12 @@
     "gold_min": 10,
     "gold_max": 20,
     "respawn_seconds": 55,
-    "loot": [{"item": "stolen_ledger", "chance": 0.25}]
+    "loot": [
+      {
+        "item": "stolen_ledger",
+        "chance": 0.25
+      }
+    ]
   },
   "undertow_enforcer": {
     "name": "an undertow enforcer",
@@ -165,7 +210,24 @@
     "gold_min": 30,
     "gold_max": 50,
     "respawn_seconds": 150,
-    "loot": [{"item": "undertow_signet", "chance": 0.5}, {"item": "stolen_ledger", "chance": 0.3}]
+    "loot": [
+      {
+        "item": "undertow_signet",
+        "chance": 0.5
+      },
+      {
+        "item": "stolen_ledger",
+        "chance": 0.3
+      },
+      {
+        "item": "thieves_coin",
+        "chance": 0.4
+      },
+      {
+        "item": "shadow_dirk",
+        "chance": 0.2
+      }
+    ]
   },
   "cave_rat": {
     "name": "a cave rat",
@@ -235,7 +297,20 @@
     "gold_min": 10,
     "gold_max": 20,
     "respawn_seconds": 90,
-    "loot": [{"item": "tide_idol", "chance": 0.3}]
+    "loot": [
+      {
+        "item": "tide_idol",
+        "chance": 0.3
+      },
+      {
+        "item": "charm_of_warding",
+        "chance": 0.35
+      },
+      {
+        "item": "crusaders_mace",
+        "chance": 0.2
+      }
+    ]
   },
   "archive_construct": {
     "name": "an archive construct",
@@ -249,7 +324,20 @@
     "gold_min": 0,
     "gold_max": 0,
     "respawn_seconds": 180,
-    "loot": [{"item": "vael_sigil", "chance": 1.0}]
+    "loot": [
+      {
+        "item": "vael_sigil",
+        "chance": 1.0
+      },
+      {
+        "item": "luck_stone",
+        "chance": 0.4
+      },
+      {
+        "item": "storm_staff",
+        "chance": 0.2
+      }
+    ]
   },
   "the_tidewarden": {
     "name": "the tidewarden",
@@ -263,7 +351,28 @@
     "gold_min": 60,
     "gold_max": 100,
     "respawn_seconds": 450,
-    "loot": [{"item": "drowned_crown", "chance": 0.3}, {"item": "tidewarden_heart", "chance": 0.5}]
+    "loot": [
+      {
+        "item": "drowned_crown",
+        "chance": 0.3
+      },
+      {
+        "item": "tidewarden_heart",
+        "chance": 0.5
+      },
+      {
+        "item": "vael_shard",
+        "chance": 0.5
+      },
+      {
+        "item": "ironweave_cuirass",
+        "chance": 0.35
+      },
+      {
+        "item": "whispering_ring",
+        "chance": 0.4
+      }
+    ]
   },
   "graveyard_rat": {
     "name": "a graveyard rat",
@@ -333,7 +442,16 @@
     "gold_min": 12,
     "gold_max": 22,
     "respawn_seconds": 90,
-    "loot": []
+    "loot": [
+      {
+        "item": "ghostweave_cloak",
+        "chance": 0.3
+      },
+      {
+        "item": "shadow_dirk",
+        "chance": 0.2
+      }
+    ]
   },
   "the_bone_warden": {
     "name": "the bone warden",
@@ -347,7 +465,24 @@
     "gold_min": 50,
     "gold_max": 90,
     "respawn_seconds": 360,
-    "loot": [{"item": "warden_femur_blade", "chance": 0.4}, {"item": "grave_gold", "chance": 1.0}]
+    "loot": [
+      {
+        "item": "warden_femur_blade",
+        "chance": 0.4
+      },
+      {
+        "item": "grave_gold",
+        "chance": 1.0
+      },
+      {
+        "item": "bone_reaper",
+        "chance": 0.35
+      },
+      {
+        "item": "bloodstone_amulet",
+        "chance": 0.3
+      }
+    ]
   },
   "cave_crab": {
     "name": "a cave crab",
@@ -473,7 +608,12 @@
     "gold_min": 10,
     "gold_max": 20,
     "respawn_seconds": 90,
-    "loot": []
+    "loot": [
+      {
+        "item": "moonstone_pendant",
+        "chance": 0.3
+      }
+    ]
   },
   "red_tide_captain": {
     "name": "the red tide captain",
@@ -487,7 +627,28 @@
     "gold_min": 40,
     "gold_max": 70,
     "respawn_seconds": 300,
-    "loot": [{"item": "captains_cutlass", "chance": 0.4}, {"item": "red_tide_standard", "chance": 0.2}]
+    "loot": [
+      {
+        "item": "captains_cutlass",
+        "chance": 0.4
+      },
+      {
+        "item": "red_tide_standard",
+        "chance": 0.2
+      },
+      {
+        "item": "moonstone_pendant",
+        "chance": 0.35
+      },
+      {
+        "item": "kite_shield",
+        "chance": 0.3
+      },
+      {
+        "item": "enchanted_blade",
+        "chance": 0.2
+      }
+    ]
   },
   "fen_mother": {
     "name": "the fen mother",
@@ -501,7 +662,24 @@
     "gold_min": 50,
     "gold_max": 90,
     "respawn_seconds": 360,
-    "loot": [{"item": "fen_mothers_staff", "chance": 0.35}, {"item": "hag_eye", "chance": 0.5}]
+    "loot": [
+      {
+        "item": "fen_mothers_staff",
+        "chance": 0.35
+      },
+      {
+        "item": "hag_eye",
+        "chance": 0.5
+      },
+      {
+        "item": "ghostweave_cloak",
+        "chance": 0.35
+      },
+      {
+        "item": "charm_of_warding",
+        "chance": 0.3
+      }
+    ]
   },
   "ashwing_drake": {
     "name": "the ashwing drake",
@@ -515,6 +693,27 @@
     "gold_min": 100,
     "gold_max": 180,
     "respawn_seconds": 600,
-    "loot": [{"item": "drake_scale", "chance": 0.6}, {"item": "ashwing_fang", "chance": 0.3}]
+    "loot": [
+      {
+        "item": "drake_scale",
+        "chance": 0.6
+      },
+      {
+        "item": "ashwing_fang",
+        "chance": 0.3
+      },
+      {
+        "item": "shadowskin",
+        "chance": 0.35
+      },
+      {
+        "item": "whispering_ring",
+        "chance": 0.3
+      },
+      {
+        "item": "bone_reaper",
+        "chance": 0.3
+      }
+    ]
   }
 }
