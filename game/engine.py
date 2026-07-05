@@ -8,12 +8,14 @@ import random
 import time
 from . import colors as c
 from . import persistence
+from . import time as gametime
 from .models import Player, MobInstance, CLASS_INFO, MAX_LEVEL
+from .weather import WeatherState
 from .world import World
 
 TICK_SECONDS   = 2.0
 SAVE_INTERVAL  = 30.0
-WANDER_TICKS   = 10    # check wandering every N ticks (10 x 2 s = 20 s real = ~4 game min)
+WANDER_TICKS   = 10    # check wandering every N ticks (10 × 2 s = 20 s real = ~4 game min)
 WANDER_CHANCE  = 0.30  # probability a qualifying mob wanders per check
 
 # Rooms grouped into zones; mobs only wander to adjacent rooms in the same zone.
@@ -79,6 +81,7 @@ class GameEngine:
         self._opened_containers: set[str] = set()
         self._mob_seq = 0
         self._wander_tick = 0
+        self.weather = WeatherState(gametime.now().season)
         self._spawn_initial_mobs()
 
     # ---- world / mob spawning ------------------------------------------------
@@ -256,6 +259,11 @@ class GameEngine:
 
     async def _tick(self):
         now = time.time()
+
+        # weather transitions
+        change_msg = self.weather.maybe_update(now, gametime.now().season)
+        if change_msg:
+            await self.broadcast(c.system(change_msg))
 
         # mob respawns
         for inst in list(self.mobs.values()):
