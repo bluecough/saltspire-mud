@@ -158,6 +158,7 @@ class Player:
     is_admin: bool = False
     is_assistant_admin: bool = False
     known_skills: list = field(default_factory=list)        # ability ids learned from guild trainers
+    visited_rooms: list = field(default_factory=list)       # rooms entered (fog-of-war for map command)
 
     # --- runtime-only, never persisted: combat buffs reset on reconnect ---
     websocket: object = field(default=None, repr=False, compare=False)
@@ -173,7 +174,8 @@ class Player:
     PERSIST_FIELDS = (
         "name", "race", "klass", "level", "xp", "gold", "hp", "max_hp", "mana",
         "max_mana", "room_id", "inventory", "equipment", "stats",
-        "password_hash", "password_salt", "is_admin", "is_assistant_admin", "known_skills",
+        "password_hash", "password_salt", "is_admin", "is_assistant_admin",
+        "known_skills", "visited_rooms",
     )
 
     def stat_mod(self, stat: str) -> int:
@@ -199,6 +201,7 @@ class Player:
             "password_hash": self.password_hash, "password_salt": self.password_salt,
             "is_admin": self.is_admin, "is_assistant_admin": self.is_assistant_admin,
             "known_skills": list(self.known_skills),
+            "visited_rooms": list(self.visited_rooms),
         }
 
     @classmethod
@@ -242,5 +245,6 @@ class Player:
             is_admin=bool(d.get("is_admin", False)),
             is_assistant_admin=bool(d.get("is_assistant_admin", False)),
             known_skills=known_skills,
+            visited_rooms=list(d.get("visited_rooms", [])),
         )
         return p
