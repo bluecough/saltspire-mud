@@ -105,6 +105,7 @@ HELP_TEXT = (
     "Available commands:<br>"
     "&nbsp;&nbsp;movement: north/south/east/west/up/down (n/s/e/w/u/d)<br>"
     "&nbsp;&nbsp;look [target], consider/con &lt;target&gt;, score, inventory (i), equipment (eq)<br>"
+    "&nbsp;&nbsp;map &mdash; show an ASCII map of the current zone (fog of war)<br>"
     "&nbsp;&nbsp;lore (history) &mdash; read the deeper history of where you stand, if any<br>"
     "&nbsp;&nbsp;say &lt;msg&gt;, emote &lt;action&gt;, shout &lt;msg&gt;, who<br>"
     "&nbsp;&nbsp;get &lt;item&gt;, drop &lt;item&gt;, wear/wield &lt;item&gt;, remove &lt;item&gt;<br>"
@@ -192,6 +193,8 @@ async def dispatch(ctx: CommandContext, raw: str):
         await do_look(ctx, arg)
     elif cmd in ("lore", "history"):
         await do_lore(ctx)
+    elif cmd == "map":
+        await do_map(ctx)
     elif cmd == "say":
         await do_say(ctx, arg)
     elif cmd == "emote":
@@ -382,8 +385,140 @@ def _player_combat_vibe(viewer_level: int, target_level: int) -> str:
         return "They carry themselves like someone who has survived things you haven't. Be very careful."
 
 
+# ---------------------------------------------------------------------------
+# Map helpers
+# ---------------------------------------------------------------------------
+
+def _map_abbrev(rid: str, world) -> str:
+    """Six-character room abbreviation for ASCII map cells."""
+    room = world.get_room(rid)
+    name = (room.name if room else rid).lower()
+    for art in ("the ", "a ", "an "):
+        if name.startswith(art):
+            name = name[len(art):]
+    words = name.split()
+    if not words:
+        return "??????"
+    if len(words) == 1:
+        return words[0][:6].ljust(6)
+    return (words[0][:3] + words[1][:3]).ljust(6)
+
+
+def _build_map_grid(world, start_id: str, zone_rooms) -> dict:
+    """BFS from start_id, assigning (row, col) to rooms reachable via cardinal exits."""
+    DELTA = {"north": (-1, 0), "south": (1, 0), "east": (0, 1), "west": (0, -1)}
+    coords = {start_id: (0, 0)}
+    occupied = {(0, 0): start_id}
+    queue = [start_id]
+    while queue:
+        rid = queue.pop(0)
+        room = world.get_room(rid)
+        if not room:
+            continue
+        r, co = coords[rid]
+        for direction, dest in room.exits.items():
+            if dest not in zone_rooms or dest in coords:
+                continue
+            dr, dc = DELTA.get(direction, (0, 0))
+            if dr == 0 and dc == 0:
+                continue
+            pos = (r + dr, co + dc)
+            if pos not in occupied:
+                coords[dest] = pos
+                occupied[pos] = dest
+                queue.append(dest)
+    return coords
+
+
+def _render_map(coords: dict, current_id: str, visited: set, world) -> str:
+    """Render the grid as an HTML-coloured ASCII map."""
+    if not coords:
+        return ""
+    inv = {v: k for k, v in coords.items()}
+    rows = [r for r, _ in coords.values()]
+    cols = [c for _, c in coords.values()]
+    min_r, max_r = min(rows), max(rows)
+    min_c, max_c = min(cols), max(cols)
+
+    C_HERE   = "color:#5DCAA5;font-weight:bold"
+    C_SEEN   = "color:#AFA9EC"
+    C_UNSEEN = "color:#534AB7"
+    C_CONN   = "color:#555"
+
+    def cell_html(rid):
+        ab = _map_abbrev(rid, world)
+        if rid == current_id:
+            return f'<span style="{C_HERE}">[{ab}]</span>'
+        if rid in visited:
+            return f'<span style="{C_SEEN}">[{ab}]</span>'
+        return f'<span style="{C_UNSEEN}">[----]</span>'
+
+    def has_exit(from_id, direction, to_id):
+        room = world.get_room(from_id)
+        return bool(room and room.exits.get(direction) == to_id)
+
+    lines = []
+    for row in range(min_r, max_r + 1):
+        room_parts = []
+        conn_parts = []
+        for col in range(min_c, max_c + 1):
+            rid = inv.get((row, col))
+            is_last = (col == max_c)
+            if rid:
+                room_parts.append(cell_html(rid))
+                if not is_last:
+                    east_id = inv.get((row, col + 1))
+                    if east_id and has_exit(rid, "east", east_id):
+                        room_parts.append(f'<span style="{C_CONN}">---</span>')
+                    else:
+                        room_parts.append('   ')
+                if row < max_r:
+                    south_id = inv.get((row + 1, col))
+                    if south_id and has_exit(rid, "south", south_id):
+                        pipe = f'<span style="{C_CONN}">   |    </span>'
+                    else:
+                        pipe = '        '
+                    conn_parts.append(pipe + ('' if is_last else '   '))
+            else:
+                room_parts.append('        ' if is_last else '           ')
+                if row < max_r:
+                    conn_parts.append('        ' if is_last else '           ')
+        lines.append(''.join(room_parts))
+        if row < max_r and conn_parts:
+            lines.append(''.join(conn_parts))
+    return '<br>'.join(lines)
+
+
+async def do_map(ctx):
+    from .engine import _ROOM_ZONE, _ZONES
+    p = ctx.player
+    zone = _ROOM_ZONE.get(p.room_id)
+    if not zone:
+        await ctx.engine.send(p, c.error("No map data for this area."))
+        return
+    coords = _build_map_grid(ctx.world, p.room_id, _ZONES[zone])
+    visited = set(p.visited_rooms)
+    html = _render_map(coords, p.room_id, visited, ctx.world)
+    if not html:
+        await ctx.engine.send(p, c.error("Cannot generate a map from here."))
+        return
+    legend = (
+        f"<span style='color:#5DCAA5'>&#9632;</span> here &nbsp;"
+        f"<span style='color:#AFA9EC'>&#9632;</span> visited &nbsp;"
+        f"<span style='color:#534AB7'>&#9632;</span> unexplored"
+    )
+    header = c.help_(f"Map &mdash; {zone} zone") + f"&nbsp;&nbsp; {legend}"
+    await ctx.engine.send(
+        p,
+        f"{header}<br>"
+        f"<code style='font-family:monospace;font-size:12px;line-height:1.8'>{html}</code>"
+    )
+
+
 async def do_look(ctx, arg):
     p = ctx.player
+    if p.room_id not in p.visited_rooms:
+        p.visited_rooms.append(p.room_id)
     room = ctx.world.get_room(p.room_id)
 
     if arg:
@@ -1325,7 +1460,7 @@ async def do_listplayers(ctx):
         await ctx.engine.send(p, c.admin("No saved characters found."))
         return
     online_set = {n.lower() for n in ctx.engine.players}
-    lines = [c.admin(f"Saved characters ({len(names)}):")]
+    lines = [c.admin(f"Saved characters ({len(names)}):" )]
     for name in names:
         char = persistence.load(name)
         if char:
