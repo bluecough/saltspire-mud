@@ -150,6 +150,16 @@ ADMIN_HELP_TEXT = (
     "&nbsp;&nbsp;checkai &mdash; test connectivity to the Ollama NPC AI server"
 )
 
+# Populated at module bottom after all handlers are defined.
+_CMD_TABLE: dict = {}
+
+
+def _a(fn):
+    """Wrap a (ctx)-only handler to accept (ctx, arg) for uniform dispatch."""
+    async def _wrapper(ctx, arg):
+        await fn(ctx)
+    return _wrapper
+
 
 class QuitRequested(Exception):
     """Raised by do_quit and propagated up to main.py to close the socket."""
@@ -187,121 +197,11 @@ async def dispatch(ctx: CommandContext, raw: str):
 
     if cmd in DIRECTIONS:
         await do_move(ctx, DIRECTIONS[cmd])
-    elif cmd in ("look", "l"):
-        await do_look(ctx, arg)
-    elif cmd in ("consider", "con"):
-        await do_look(ctx, arg)
-    elif cmd in ("lore", "history"):
-        await do_lore(ctx)
-    elif cmd == "map":
-        await do_map(ctx)
-    elif cmd == "say":
-        await do_say(ctx, arg)
-    elif cmd == "emote":
-        await do_emote(ctx, arg)
-    elif cmd in ("shout", "gossip"):
-        await do_shout(ctx, arg)
-    elif cmd == "who":
-        await do_who(ctx)
-    elif cmd in ("inventory", "i", "inv"):
-        await do_inventory(ctx)
-    elif cmd in ("equipment", "eq"):
-        await do_equipment(ctx)
-    elif cmd in ("score", "stats", "sc"):
-        await do_score(ctx)
-    elif cmd in ("get", "take"):
-        await do_get(ctx, arg)
-    elif cmd == "drop":
-        await do_drop(ctx, arg)
-    elif cmd in ("wear", "wield"):
-        await do_wear(ctx, arg)
-    elif cmd == "remove":
-        await do_remove(ctx, arg)
-    elif cmd in ("quaff", "drink"):
-        await do_quaff(ctx, arg)
-    elif cmd in ("kill", "attack", "k"):
-        await do_kill(ctx, arg)
-    elif cmd == "flee":
-        await do_flee(ctx)
-    elif cmd == "rest":
-        await do_rest(ctx)
-    elif cmd == "wake":
-        await do_wake(ctx)
-    elif cmd == "cast":
-        await do_cast(ctx, arg)
-    elif cmd == "bash":
-        await do_bash(ctx, arg)
-    elif cmd == "backstab":
-        await do_backstab(ctx, arg)
-    elif cmd == "use":
-        await do_use(ctx, arg)
-    elif cmd in ("skills", "spells", "abilities"):
-        await do_skills(ctx)
-    elif cmd == "learn":
-        await do_learn(ctx, arg)
-    elif cmd == "list":
-        await do_list(ctx)
-    elif cmd == "buy":
-        await do_buy(ctx, arg)
-    elif cmd == "sell":
-        await do_sell(ctx, arg)
-    elif cmd == "pray":
-        await do_pray(ctx)
-    elif cmd == "open":
-        await do_open(ctx, arg)
-    elif cmd == "talk":
-        await do_talk(ctx, arg)
-    elif cmd == "changepass":
-        await do_changepass(ctx, arg)
-    elif cmd == "kick":
-        await do_kick(ctx, arg)
-    elif cmd == "listplayers":
-        await do_listplayers(ctx)
-    elif cmd == "deleteplayer":
-        await do_deleteplayer(ctx, arg)
-    elif cmd == "setlevel":
-        await do_setlevel(ctx, arg)
-    elif cmd == "setstat":
-        await do_setstat(ctx, arg)
-    elif cmd == "makeassistant":
-        await do_makeassistant(ctx, arg)
-    elif cmd == "setpass":
-        await do_setpass(ctx, arg)
-    elif cmd == "makeadmin":
-        await do_makeadmin(ctx, arg)
-    elif cmd == "setmaxplayers":
-        await do_setmaxplayers(ctx, arg)
-    elif cmd == "lockregistration":
-        await do_lockregistration(ctx, arg)
-    elif cmd == "loginhistory":
-        await do_loginhistory(ctx, arg)
-    elif cmd == "setloginhistory":
-        await do_setloginhistory(ctx, arg)
-    elif cmd == "checkai":
-        await do_checkai(ctx)
-    elif cmd == "rooms":
-        await do_rooms(ctx)
-    elif cmd == "goto":
-        await do_goto(ctx, arg)
-    elif cmd == "dig":
-        await do_dig(ctx, arg)
-    elif cmd == "rlink":
-        await do_rlink(ctx, arg)
-    elif cmd == "runlink":
-        await do_runlink(ctx, arg)
-    elif cmd == "rname":
-        await do_rname(ctx, arg)
-    elif cmd == "rdesc":
-        await do_rdesc(ctx, arg)
-    elif cmd == "rlore":
-        await do_rlore(ctx, arg)
-    elif cmd == "rsafe":
-        await do_rsafe(ctx, arg)
-    elif cmd in ("help", "?"):
-        text = HELP_TEXT + (ADMIN_HELP_TEXT if _is_staff(ctx.player) else "")
-        await ctx.engine.send(ctx.player, c.help_(text))
-    elif cmd == "quit":
-        await do_quit(ctx)
+        return
+
+    handler = _CMD_TABLE.get(cmd)
+    if handler:
+        await handler(ctx, arg)
     else:
         await ctx.engine.send(ctx.player, c.error(f"Unknown command: '{cmd}'. Type 'help' for a list."))
 
@@ -1976,3 +1876,75 @@ async def do_checkai(ctx):
         ]
 
     await ctx.engine.send(p, "<br>".join(lines))
+
+
+# ---------------------------------------------------------------------------
+# Command dispatch table  (populated here, after all handlers are defined)
+# ---------------------------------------------------------------------------
+
+async def _do_help(ctx, arg):
+    text = HELP_TEXT + (ADMIN_HELP_TEXT if _is_staff(ctx.player) else "")
+    await ctx.engine.send(ctx.player, c.help_(text))
+
+
+def _reg(handler, *names):
+    for name in names:
+        _CMD_TABLE[name] = handler
+
+
+_reg(do_look,               "look", "l", "consider", "con")
+_reg(_a(do_lore),           "lore", "history")
+_reg(_a(do_map),            "map")
+_reg(do_say,                "say")
+_reg(do_emote,              "emote")
+_reg(do_shout,              "shout", "gossip")
+_reg(_a(do_who),            "who")
+_reg(_a(do_inventory),      "inventory", "i", "inv")
+_reg(_a(do_equipment),      "equipment", "eq")
+_reg(_a(do_score),          "score", "stats", "sc")
+_reg(do_get,                "get", "take")
+_reg(do_drop,               "drop")
+_reg(do_wear,               "wear", "wield")
+_reg(do_remove,             "remove")
+_reg(do_quaff,              "quaff", "drink")
+_reg(do_kill,               "kill", "attack", "k")
+_reg(_a(do_flee),           "flee")
+_reg(_a(do_rest),           "rest")
+_reg(_a(do_wake),           "wake")
+_reg(do_cast,               "cast")
+_reg(do_bash,               "bash")
+_reg(do_backstab,           "backstab")
+_reg(do_use,                "use")
+_reg(_a(do_skills),         "skills", "spells", "abilities")
+_reg(do_learn,              "learn")
+_reg(_a(do_list),           "list")
+_reg(do_buy,                "buy")
+_reg(do_sell,               "sell")
+_reg(_a(do_pray),           "pray")
+_reg(do_open,               "open")
+_reg(do_talk,               "talk")
+_reg(do_changepass,         "changepass")
+_reg(do_kick,               "kick")
+_reg(_a(do_listplayers),    "listplayers")
+_reg(do_deleteplayer,       "deleteplayer")
+_reg(do_setlevel,           "setlevel")
+_reg(do_setstat,            "setstat")
+_reg(do_makeassistant,      "makeassistant")
+_reg(do_setpass,            "setpass")
+_reg(do_makeadmin,          "makeadmin")
+_reg(do_setmaxplayers,      "setmaxplayers")
+_reg(do_lockregistration,   "lockregistration")
+_reg(do_loginhistory,       "loginhistory")
+_reg(do_setloginhistory,    "setloginhistory")
+_reg(_a(do_checkai),        "checkai")
+_reg(_a(do_rooms),          "rooms")
+_reg(do_goto,               "goto")
+_reg(do_dig,                "dig")
+_reg(do_rlink,              "rlink")
+_reg(do_runlink,            "runlink")
+_reg(do_rname,              "rname")
+_reg(do_rdesc,              "rdesc")
+_reg(do_rlore,              "rlore")
+_reg(do_rsafe,              "rsafe")
+_reg(_a(do_quit),           "quit")
+_reg(_do_help,              "help", "?")
